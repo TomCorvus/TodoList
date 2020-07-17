@@ -1,21 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Provider } from 'react-redux';
+import { StyleSheet, View, StatusBar, Platform } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { AppNavigator } from './components/Navigation/AppNavigator';
+import { store } from './reducers/TodoReducer';
+import globalColors from './constants/Colors';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+class App extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+
+	componentDidMount() {}
+
+	render() {
+		return (
+			<Provider store={store}>
+				{Platform.OS === 'ios' && (
+					<>
+						<View style={styles.appBar}></View>
+						<StatusBar barStyle="light-content" />
+					</>
+				)}
+				<View style={styles.container}>
+					<AppNavigator />
+				</View>
+			</Provider>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+	container: {
+		flex: 1,
+		backgroundColor: globalColors.bodyLightBackgroundColor,
+	},
+	appBar: {
+		height: getStatusBarHeight(),
+		backgroundColor: globalColors.headerBackgroundColor,
+	},
 });
+
+export default App;
