@@ -2,6 +2,7 @@ export default {
 	// Font
 	globalFontSize: 16,
 	globalIconFontSize: 18,
+	bigIconFontSize: 30,
 
 	// Header
 	headerHeight: 60,

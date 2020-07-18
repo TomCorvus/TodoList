@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight, Animated } from 'react-native';
 import Icon from '../Global/Icon';
+import HomeTodoImage from './HomeTodoImage';
 import globalVariables from '../../constants/Variables';
 import globalColors from '../../constants/Colors';
 import globalStyles from '../../constants/Styles';
@@ -82,6 +83,7 @@ class HomeTodo extends React.PureComponent {
 									style={this.state.checked ? [styles.title, styles.checkedTitle] : styles.title}>
 									{todoData.title}
 								</Text>
+								<HomeTodoImage todoID={todoData.id} todoImage={todoData.image} />
 								<Icon
 									name="angle-right-solid"
 									size={globalVariables.globalIconFontSize}
