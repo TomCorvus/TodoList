@@ -97,7 +97,7 @@ class HomeList extends React.Component {
 	}
 
 	/**
-	 * Delete todo by ID
+	 * Check todo by ID
 	 * @param {*} id
 	 */
 	checkTodo(id, status) {

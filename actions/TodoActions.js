@@ -1,4 +1,4 @@
-import { SET_TODOLIST, ADD_TODO, CHECK_TODO, DELETE_TODO } from './TodoActionsTypes';
+import { SET_TODOLIST, ADD_TODO, EDIT_TODO, CHECK_TODO, DELETE_TODO } from './TodoActionsTypes';
 
 /**
  * Set todo list
@@ -18,6 +18,17 @@ export function setTodoList(todoList) {
 export function addTodo(todoInfo) {
 	return {
 		type: ADD_TODO,
+		todoInfo: todoInfo,
+	};
+}
+
+/**
+ * Edit todo
+ * @param {*} todoInfo
+ */
+export function editTodo(todoInfo) {
+	return {
+		type: EDIT_TODO,
 		todoInfo: todoInfo,
 	};
 }

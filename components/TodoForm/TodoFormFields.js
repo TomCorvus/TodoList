@@ -9,7 +9,7 @@ import {
 	Platform,
 } from 'react-native';
 import { connect } from 'react-redux';
-import { addTodo } from '../../actions/TodoActions';
+import { addTodo, editTodo } from '../../actions/TodoActions';
 import { getTodoInfo } from '../../functions/Todo';
 import TodoFormTitle from './TodoFormTitle';
 import TodoFormSubmit from './TodoFormSubmit';
@@ -96,10 +96,23 @@ class TodoFormFields extends React.Component {
 			let validTitle = this.checkTodoTitle(title);
 			if (validTitle) {
 				if (todoID !== undefined) {
-					// this.props.editList({
-					// 	id: todoID,
-					// 	title: title,
-					// });
+					fetch(`https://jsonplaceholder.typicode.com/todos/${todoID}`, {
+						method: 'PATCH',
+						body: JSON.stringify({
+							title: title,
+						}),
+						headers: {
+							'Content-type': 'application/json; charset=UTF-8',
+						},
+					})
+						.then((response) => response.json())
+						.then((json) => {
+							this.props.editTodo(json);
+							this.props.navigation.goBack();
+						})
+						.catch(function (error) {
+							console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+						});
 				} else {
 					fetch('https://jsonplaceholder.typicode.com/todos', {
 						method: 'POST',
@@ -178,6 +191,10 @@ function mapDispatchToProps(dispatch) {
 	return {
 		addTodo: function (todoInfo) {
 			var action = addTodo(todoInfo);
+			dispatch(action);
+		},
+		editTodo: function (todoInfo) {
+			var action = editTodo(todoInfo);
 			dispatch(action);
 		},
 	};
