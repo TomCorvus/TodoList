@@ -10,20 +10,15 @@ export default {
 	headerActiveIconColor: '#04a1e0',
 
 	// Body
-	bodyDarkBackgroundColor: '#024959',
 	bodyLightBackgroundColor: '#F5F5F5',
 
 	// Buttons
-	primaryButtonBackgroundColor: '#3C88FF',
+	primaryButtonBackgroundColor: '#eb6e2f',
 	primaryButtonTextColor: '#FFFFFF',
 	primaryActiveButtonBackgroundColor: '#01171c',
 	primaryActiveButtonTextColor: '#FFFFFF',
 	primaryDisabledButtonBackgroundColor: '#01171ca8',
 	primaryDisabledButtonTextColor: '#FFFFFF',
-
-	secondaryButtonBackgroundColor: '#F5F5F5',
-	secondaryActiveButtonBackgroundColor: '#ededed',
-	secondaryButtonTextColor: '#143F59',
 
 	// Attributs
 	attributsColor: '#616363',
@@ -42,8 +37,8 @@ export default {
 	errorBackgroundColor: '#BF1616',
 	errorTextColor: '#BF1616',
 
-	validBackgroundColor: '#C9D98F',
-	validTextColor: '#688C32',
+	validBackgroundColor: '#FF7E3C',
+	validTextColor: '#FFFFFF',
 
 	infoBackgroundColor: '#9BB9CC',
 	infoTextColor: '#235D80',

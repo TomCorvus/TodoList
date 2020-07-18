@@ -1,6 +1,6 @@
 export default {
 	// Font
-	globalFontSize: 16,
+	globalFontSize: 14,
 	globalIconFontSize: 18,
 	bigIconFontSize: 30,
 

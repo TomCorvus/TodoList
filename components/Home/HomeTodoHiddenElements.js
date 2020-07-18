@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
 import { connect } from 'react-redux';
+import InsetShadow from 'react-native-inset-shadow';
 import Icon from '../Global/Icon';
 import globalVariables from '../../constants/Variables';
 import globalColors from '../../constants/Colors';
@@ -8,6 +9,29 @@ import globalColors from '../../constants/Colors';
 class HomeTodoHiddenElements extends React.PureComponent {
 	constructor(props) {
 		super(props);
+	}
+
+	/**
+	 * Confirm to delete list
+	 * @param {*} todoID
+	 */
+	_confirmDeleteTodo(todoID) {
+		Alert.alert(
+			'Supprimer cette tâche ?',
+			'Cette action est définitive.',
+			[
+				{
+					text: 'Supprimer',
+					onPress: () => this._deleteTodo(todoID),
+					style: 'destructive',
+				},
+				{
+					text: 'Annuler',
+					style: 'cancel',
+				},
+			],
+			{ cancelable: false }
+		);
 	}
 
 	/**
@@ -44,28 +68,46 @@ class HomeTodoHiddenElements extends React.PureComponent {
 		const { todoData } = this.props;
 
 		return (
-			<View style={styles.container}>
-				<TouchableOpacity
-					style={[styles.backRightBtn, styles.backRightBtnLeft]}
-					onPress={() => this.editTodo(todoData.id)}
-					activeOpacity={0.5}>
-					<Icon
-						name="pen-solid"
-						size={globalVariables.globalIconFontSize}
-						color={globalColors.editTextColor}
-					/>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={[styles.backRightBtn, styles.backRightBtnRight]}
-					onPress={() => this._deleteTodo(todoData.id)}
-					activeOpacity={0.5}>
-					<Icon
-						name="trash-alt"
-						size={globalVariables.globalIconFontSize}
-						color={globalColors.deleteTextColor}
-					/>
-				</TouchableOpacity>
-			</View>
+			<Animated.View
+				style={[
+					{
+						position: 'relative',
+						overflow: 'hidden',
+						height: todoData.animation.interpolate({
+							inputRange: [0, 1],
+							outputRange: [0, globalVariables.rowHeight],
+						}),
+					},
+				]}>
+				<InsetShadow shadowOpacity={0.2} shadowRadius={3}>
+					<View style={styles.container}>
+						<TouchableOpacity
+							style={[styles.backRightBtn, styles.backRightBtnLeft]}
+							onPress={() => this.editTodo(todoData.id)}
+							activeOpacity={0.5}>
+							<Icon
+								name="pen-solid"
+								size={globalVariables.globalIconFontSize}
+								color={globalColors.editTextColor}
+							/>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={[styles.backRightBtn, styles.backRightBtnRight]}
+							onPress={() => {
+								Platform.OS === 'web'
+									? this._deleteTodo(todoData.id)
+									: this._confirmDeleteTodo(todoData.id);
+							}}
+							activeOpacity={0.5}>
+							<Icon
+								name="trash-alt"
+								size={globalVariables.globalIconFontSize}
+								color={globalColors.deleteTextColor}
+							/>
+						</TouchableOpacity>
+					</View>
+				</InsetShadow>
+			</Animated.View>
 		);
 	}
 }
