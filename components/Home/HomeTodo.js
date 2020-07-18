@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight, Animated } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight, TouchableOpacity, Animated } from 'react-native';
 import Icon from '../Global/Icon';
 import HomeTodoImage from './HomeTodoImage';
 import globalVariables from '../../constants/Variables';
@@ -62,7 +62,7 @@ class HomeTodo extends React.PureComponent {
 						<TouchableHighlight
 							style={styles.checkboxAction}
 							onPress={() => this._onCheck(todoData.id)}
-							activeOpacity={0.5}
+							activeOpacity={0.2}
 							underlayColor="transparent">
 							<View
 								style={this.state.checked ? [styles.checkbox, styles.activeCheckbox] : styles.checkbox}>
@@ -76,10 +76,10 @@ class HomeTodo extends React.PureComponent {
 								)}
 							</View>
 						</TouchableHighlight>
-						<TouchableHighlight
+						<TouchableOpacity
+							activeOpacity={0.5}
 							onPress={() => this._onPress(todoData.id)}
-							style={styles.titleBtn}
-							underlayColor={globalColors.baseTouchableHighlightUnderlayColor}>
+							style={styles.titleBtn}>
 							<View style={styles.titleWrapper}>
 								<Text
 									numberOfLines={1}
@@ -93,7 +93,7 @@ class HomeTodo extends React.PureComponent {
 									color={globalColors.iconDefaultColor}
 								/>
 							</View>
-						</TouchableHighlight>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</Animated.View>

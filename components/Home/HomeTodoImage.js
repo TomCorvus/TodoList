@@ -33,7 +33,7 @@ class HomeTodoImage extends React.Component {
 		return (
 			<View style={styles.container}>
 				<TouchableHighlight
-					style={styles.checkboxAction}
+					style={styles.imagePickerButton}
 					onPress={() => this._pickImage(this.props.todoID)}
 					activeOpacity={0.5}
 					underlayColor="transparent">
@@ -45,7 +45,7 @@ class HomeTodoImage extends React.Component {
 								style={styles.checkboxIcon}
 								name="camera-solid"
 								size={globalVariables.globalIconFontSize}
-								color={globalColors.attributsColor}
+								color={"#969696"}
 							/>
 						)}
 						{this.state.isLoading && (
@@ -140,8 +140,15 @@ const styles = StyleSheet.create({
 		borderRadius: 15,
 		borderWidth: 1,
 		borderColor: '#b3b3b3',
-		backgroundColor: '#d9dadb',
+		backgroundColor: '#f0f0f0',
 		overflow: 'hidden',
+		marginRight: 5,
+	},
+	imagePickerButton: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		alignSelf: 'stretch',
 	},
 	indicator: {
 		position: 'absolute',
