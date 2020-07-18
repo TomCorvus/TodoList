@@ -2,9 +2,11 @@ import React from 'react';
 import { StyleSheet, View, Text, ActivityIndicator, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import * as immer from 'immer';
 import { setTodoList, checkTodo, deleteTodo } from '../../actions/TodoActions';
 import HomeTodo from './HomeTodo';
 import HomeTodoHiddenElements from './HomeTodoHiddenElements';
+import HomeAddTodo from './HomeAddTodo';
 import globalStyles from '../../constants/Styles';
 import globalVariables from '../../constants/Variables';
 import globalColors from '../../constants/Colors';
@@ -70,10 +72,6 @@ class HomeList extends React.Component {
 		fetch('https://jsonplaceholder.typicode.com/todos/')
 			.then((response) => response.json())
 			.then((json) => {
-				json.forEach((todo) => {
-					todo.key = `${todo.id}`;
-					todo.animation = new Animated.Value(1);
-				});
 				this.props.setTodoList(json);
 				this.setState({ dataLoaded: true });
 			})
@@ -132,6 +130,13 @@ class HomeList extends React.Component {
 		let todoList = this.props.todoList,
 			keyForSwipePreview = '1';
 
+		let newTodoList = immer.produce(todoList, (draftTodoList) => {
+			draftTodoList.forEach((todo) => {
+				todo.key = `${todo.id}`;
+				todo.animation = new Animated.Value(1);
+			});
+		});
+
 		return (
 			<View style={styles.wrapper}>
 				{this.state.dataLoaded ? (
@@ -139,7 +144,7 @@ class HomeList extends React.Component {
 						<View style={styles.container}>
 							{todoList.length > 0 ? (
 								<SwipeListView
-									data={todoList}
+									data={newTodoList}
 									renderItem={this._renderList}
 									renderHiddenItem={this._renderHiddenProductActions}
 									rightOpenValue={-150}
@@ -157,6 +162,7 @@ class HomeList extends React.Component {
 								</View>
 							)}
 						</View>
+						<HomeAddTodo navigation={this.props.navigation} />
 					</>
 				) : (
 					<View style={styles.loaderContainer}>

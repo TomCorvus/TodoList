@@ -21,5 +21,5 @@ export function getTodoInfo(todoID, todoList) {
 		return todo.id === todoID;
 	});
 
-	return todoList[todoIndex];
+	return { ...todoList[todoIndex] };
 }

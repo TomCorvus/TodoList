@@ -13,12 +13,12 @@ export function setTodoList(todoList) {
 
 /**
  * Add todo
- * @param {*} todo
+ * @param {*} todoInfo
  */
-export function addTodo(todo) {
+export function addTodo(todoInfo) {
 	return {
 		type: ADD_TODO,
-		todo: todo,
+		todoInfo: todoInfo,
 	};
 }
 

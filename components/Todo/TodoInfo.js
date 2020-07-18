@@ -12,10 +12,16 @@ class TodoInfo extends React.PureComponent {
 
 	componentDidUpdate(prevProps) {}
 
-	componentDidMount() {}
+	componentDidMount() {
+
+	}
 
 	render() {
 		const { id, userId, completed } = this.props.todoInfo;
+
+		// fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+		// .then((response) => response.json())
+		// .then((json) => console.log(json));
 
 		return (
 			<View style={styles.wrapper}>

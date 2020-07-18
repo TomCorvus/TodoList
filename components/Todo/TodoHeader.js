@@ -41,7 +41,9 @@ class TodoHeader extends React.PureComponent {
 							</TouchableHighlight>
 						</View>
 						<View style={styles.titleWrapper}>
-							<Text style={styles.title}>{todoTitle}</Text>
+							<Text style={styles.title} numberOfLines={1}>
+								{todoTitle}
+							</Text>
 						</View>
 					</View>
 				</View>

@@ -14,7 +14,7 @@ export default {
 	bodyLightBackgroundColor: '#F5F5F5',
 
 	// Buttons
-	primaryButtonBackgroundColor: '#012830',
+	primaryButtonBackgroundColor: '#3C88FF',
 	primaryButtonTextColor: '#FFFFFF',
 	primaryActiveButtonBackgroundColor: '#01171c',
 	primaryActiveButtonTextColor: '#FFFFFF',

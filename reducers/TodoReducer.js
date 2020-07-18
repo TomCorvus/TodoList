@@ -20,7 +20,15 @@ export default function TodoReducer(state = stateInit, action) {
 		}
 
 		case 'ADD_TODO': {
-			return state;
+			let newState = immer.produce(state, (draftState) => {
+				draftState.todoList.push({
+					id: action.todoInfo.id,
+					title: action.todoInfo.title,
+					completed: action.todoInfo.completed,
+					userId: action.todoInfo.userId,
+				});
+			});
+			return newState;
 		}
 
 		case 'CHECK_TODO': {

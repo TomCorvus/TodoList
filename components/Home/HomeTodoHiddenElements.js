@@ -27,6 +27,15 @@ class HomeTodoHiddenElements extends React.PureComponent {
 		}
 	}
 
+	/**
+	 * Navigate to ProductForm view
+	 * @param {*} todoID
+	 */
+	editTodo(todoID) {
+		this.props.closeRow(this.props.rowMap, this.props.todoData.key);
+		this.props.navigation.navigate('TodoForm', { todoID: todoID });
+	}
+
 	componentDidUpdate(prevProps) {}
 
 	componentDidMount() {}
@@ -38,7 +47,7 @@ class HomeTodoHiddenElements extends React.PureComponent {
 			<View style={styles.container}>
 				<TouchableOpacity
 					style={[styles.backRightBtn, styles.backRightBtnLeft]}
-					// onPress={}
+					onPress={() => this.editTodo(todoData.id)}
 					activeOpacity={0.5}>
 					<Icon
 						name="pen-solid"
