@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { setTodoList, deleteTodo } from '../../actions/TodoActions';
 import HomeTodo from './HomeTodo';
 import HomeTodoHiddenElements from './HomeTodoHiddenElements';
 import globalStyles from '../../constants/Styles';
@@ -15,6 +16,7 @@ class HomeList extends React.Component {
 			todoList: [],
 			dataLoaded: false,
 		};
+		this.deleteTodo = this.deleteTodo.bind(this);
 		this.closeRow = this.closeRow.bind(this);
 	}
 
@@ -52,6 +54,7 @@ class HomeList extends React.Component {
 			<HomeTodoHiddenElements
 				todoData={rowData.item}
 				rowMap={rowMap}
+				deleteTodo={this.deleteTodo}
 				closeRow={this.closeRow}
 				navigation={this.props.navigation}
 			/>
@@ -67,8 +70,29 @@ class HomeList extends React.Component {
 			.then((json) => {
 				json.forEach((todo) => {
 					todo.key = `${todo.id}`;
+					todo.animation = new Animated.Value(1);
 				});
-				this.setState({ todoList: json, dataLoaded: true });
+				this.props.setTodoList(json);
+				this.setState({ dataLoaded: true });
+			})
+			.catch(function (error) {
+				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+			});
+	}
+
+	/**
+	 * Delete todo by ID
+	 * @param {*} id
+	 */
+	deleteTodo(id) {
+		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+			method: 'DELETE',
+		})
+			.then(() => {
+				this.props.deleteTodo(id);
+			})
+			.catch(function (error) {
+				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
 			});
 	}
 
@@ -80,7 +104,7 @@ class HomeList extends React.Component {
 
 	render() {
 		// Récupération des données construites pour la FlatList
-		let todoList = this.state.todoList,
+		let todoList = this.props.todoList,
 			keyForSwipePreview = '1';
 
 		return (
@@ -121,11 +145,22 @@ class HomeList extends React.Component {
 }
 
 function mapStateToProps(state) {
-	return {};
+	return {
+		todoList: state.todoList,
+	};
 }
 
 function mapDispatchToProps(dispatch) {
-	return {};
+	return {
+		setTodoList: function (todoList) {
+			var action = setTodoList(todoList);
+			dispatch(action);
+		},
+		deleteTodo: function (id) {
+			var action = deleteTodo(id);
+			dispatch(action);
+		},
+	};
 }
 
 const styles = StyleSheet.create({

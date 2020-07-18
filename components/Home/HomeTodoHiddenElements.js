@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from '../Global/Icon';
 import globalVariables from '../../constants/Variables';
@@ -8,6 +8,23 @@ import globalColors from '../../constants/Colors';
 class HomeTodoHiddenElements extends React.PureComponent {
 	constructor(props) {
 		super(props);
+	}
+
+	/**
+	 *
+	 * @param {*} todoID
+	 */
+	_deleteTodo(todoID) {
+		if (!this.animationIsRunning) {
+			Animated.timing(this.props.todoData.animation, {
+				toValue: 0,
+				duration: 200,
+				useNativeDriver: false,
+			}).start(() => {
+				this.props.deleteTodo(todoID);
+				this.animationIsRunning = false;
+			});
+		}
 	}
 
 	componentDidUpdate(prevProps) {}
@@ -31,7 +48,7 @@ class HomeTodoHiddenElements extends React.PureComponent {
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[styles.backRightBtn, styles.backRightBtnRight]}
-					// onPress={}
+					onPress={() => this._deleteTodo(todoData.id)}
 					activeOpacity={0.5}>
 					<Icon
 						name="trash-alt"

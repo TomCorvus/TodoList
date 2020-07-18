@@ -1,6 +1,9 @@
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import * as actionCreators from '../actions/TodoActions';
+import * as _ from 'lodash';
+import * as immer from 'immer';
+import { getTodoIndex } from '../functions/Todo';
 
 let stateInit = {
 	todoList: [],
@@ -8,8 +11,24 @@ let stateInit = {
 
 export default function TodoReducer(state = stateInit, action) {
 	switch (action.type) {
+		case 'SET_TODOLIST': {
+			let newState = immer.produce(state, (draftState) => {
+				draftState.todoList = action.todoList;
+			});
+
+			return newState;
+		}
+
 		case 'ADD_TODO': {
 			return state;
+		}
+		case 'DELETE_TODO': {
+			let todoIndex = getTodoIndex(action.id, state.todoList),
+				newState = immer.produce(state, (draftState) => {
+					draftState.todoList.splice(todoIndex, 1);
+				});
+
+			return newState;
 		}
 		default:
 			return state;
@@ -23,10 +42,9 @@ const composeEnhancers = composeWithDevTools({
 });
 const store = createStore(
 	TodoReducer,
-	composeEnhancers(
-		// middlewareEnhancer
-		// other store enhancers if any
-	)
+	composeEnhancers()
+	// middlewareEnhancer
+	// other store enhancers if any
 );
 
 export { store };

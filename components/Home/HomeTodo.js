@@ -44,7 +44,10 @@ class HomeTodo extends React.PureComponent {
 					{
 						position: 'relative',
 						overflow: 'hidden',
-						height: globalVariables.rowHeight,
+						height: todoData.animation.interpolate({
+							inputRange: [0, 1],
+							outputRange: [0, globalVariables.rowHeight],
+						}),
 					},
 				]}>
 				<View style={todoData.lastIndex ? [styles.wrapper, styles.lastIndexWrapper] : styles.wrapper}>
