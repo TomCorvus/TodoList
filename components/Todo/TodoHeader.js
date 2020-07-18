@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight, TouchableOpacity, Alert } from 'react-native';
 import { connect } from 'react-redux';
+import { deleteTodo } from '../../actions/TodoActions';
 import Icon from '../Global/Icon';
 import { getTodoInfo } from '../../functions/Todo';
 import globalStyles from '../../constants/Styles';
@@ -12,6 +13,38 @@ class TodoHeader extends React.PureComponent {
 		super(props);
 	}
 
+	/**
+	 * Confirm to delete todo
+	 * @param {*} todoID
+	 */
+	_confirmDeleteTodo(todoID) {
+		Alert.alert(
+			'Supprimer cette tâche ?',
+			'Cette action est définitive.',
+			[
+				{
+					text: 'Supprimer',
+					onPress: () => this._deleteTodo(todoID),
+					style: 'destructive',
+				},
+				{
+					text: 'Annuler',
+					style: 'cancel',
+				},
+			],
+			{ cancelable: false }
+		);
+	}
+
+	/**
+	 *	Delete todo
+	 * @param {*} todoID
+	 */
+	_deleteTodo(todoID) {
+		this.props.navigation.goBack();
+		this.props.deleteTodo(todoID);
+	}
+
 	componentDidUpdate(prevProps) {}
 
 	componentDidMount() {}
@@ -19,9 +52,8 @@ class TodoHeader extends React.PureComponent {
 	componentWillUnmount() {}
 
 	render() {
-		const { todoID, todoList } = this.props;
-
-		let todoTitle = getTodoInfo(todoID, todoList).title;
+		const { todoID, todoList } = this.props,
+			todoTitle = getTodoInfo(todoID, todoList).title;
 
 		return (
 			<>
@@ -45,6 +77,20 @@ class TodoHeader extends React.PureComponent {
 								{todoTitle}
 							</Text>
 						</View>
+						<View style={styles.actionsButtonContainer}>
+							<TouchableOpacity
+								style={styles.actionsButton}
+								onPress={() => {
+									Platform.OS === 'web' ? this._deleteTodo(todoID) : this._confirmDeleteTodo(todoID);
+								}}
+								activeOpacity={0.5}>
+								<Icon
+									name="trash-alt"
+									size={globalVariables.headerIconFontSize}
+									color={globalColors.headerIconColor}
+								/>
+							</TouchableOpacity>
+						</View>
 					</View>
 				</View>
 			</>
@@ -55,6 +101,14 @@ class TodoHeader extends React.PureComponent {
 function mapStateToProps(state) {
 	return {
 		todoList: state.todoList,
+	};
+}
+function mapDispatchToProps(dispatch) {
+	return {
+		deleteTodo: function (id) {
+			var action = deleteTodo(id);
+			dispatch(action);
+		},
 	};
 }
 
@@ -80,4 +134,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(mapStateToProps, null)(TodoHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(TodoHeader);

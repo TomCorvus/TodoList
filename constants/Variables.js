@@ -6,7 +6,7 @@ export default {
 
 	// Header
 	headerHeight: 60,
-	headerTitleFontSize: 20,
+	headerTitleFontSize: 16,
 	headerIconFontSize: 20,
 
 	// Attribut

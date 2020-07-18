@@ -15,9 +15,9 @@ export default {
 	// Buttons
 	primaryButtonBackgroundColor: '#eb6e2f',
 	primaryButtonTextColor: '#FFFFFF',
-	primaryActiveButtonBackgroundColor: '#01171c',
+	primaryActiveButtonBackgroundColor: '#db5b1a',
 	primaryActiveButtonTextColor: '#FFFFFF',
-	primaryDisabledButtonBackgroundColor: '#01171ca8',
+	primaryDisabledButtonBackgroundColor: '#eb6e2fa8',
 	primaryDisabledButtonTextColor: '#FFFFFF',
 
 	// Attributs

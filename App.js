@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 	},
 	appBar: {
 		height: getStatusBarHeight(),
-		backgroundColor: globalColors.headerBackgroundColor,
+		backgroundColor: "#a84411",
 	},
 });
 
