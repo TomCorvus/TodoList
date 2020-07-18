@@ -15,6 +15,7 @@ class TodoInfo extends React.Component {
 		super(props);
 		this.state = {
 			isLoading: false,
+			userName: null,
 		};
 	}
 
@@ -69,6 +70,14 @@ class TodoInfo extends React.Component {
 
 	componentDidMount() {
 		this.getPermissionAsync();
+
+		fetch(`https://jsonplaceholder.typicode.com/users/${this.props.todoInfo.userId}`)
+			.then((response) => response.json())
+			.then((json) => {
+				this.setState({
+					userName: json.name,
+				});
+			});
 	}
 
 	getPermissionAsync = async () => {
@@ -83,14 +92,10 @@ class TodoInfo extends React.Component {
 	render() {
 		const { id, userId, completed, image } = this.props.todoInfo;
 
-		// fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
-		// .then((response) => response.json())
-		// .then((json) => console.log(json));
-
 		return (
 			<View style={styles.wrapper}>
 				<View style={styles.inner}>
-					<View style={styles.imageWrapper}>
+					<View style={styles.todoInfoWrapper}>
 						<TouchableHighlight
 							style={styles.image}
 							onPress={() => this._pickImage(id)}
@@ -98,7 +103,7 @@ class TodoInfo extends React.Component {
 							underlayColor="transparent">
 							<>
 								{image ? (
-									<Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+									<Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
 								) : (
 									<Icon
 										style={styles.checkboxIcon}
@@ -116,11 +121,21 @@ class TodoInfo extends React.Component {
 								)}
 							</>
 						</TouchableHighlight>
+						<View style={styles.info}>
+							<View style={styles.infoRow}>
+								<Text style={styles.label}>ID : </Text>
+								<Text>{id}</Text>
+							</View>
+							<View style={styles.infoRow}>
+								<Text style={styles.label}>Auteur : </Text>
+								{this.state.userName && <Text>{this.state.userName}</Text>}
+							</View>
+							<View style={styles.infoRow}>
+								<Text style={styles.label}>Complétée : </Text>
+								{completed ? <Text>Oui</Text> : <Text>Non</Text>}
+							</View>
+						</View>
 					</View>
-
-					<Text>Id: {id}</Text>
-					<Text>Auteur: {userId}</Text>
-					<Text>Terminé: {completed}</Text>
 				</View>
 			</View>
 		);
@@ -144,20 +159,17 @@ const styles = StyleSheet.create({
 	inner: {
 		...globalStyles.innerBodyPage,
 	},
-	imageWrapper: {
+	todoInfoWrapper: {
 		flexDirection: 'row',
-		justifyContent: 'center',
-		alignItems: 'center',
-		alignContent: 'center',
 	},
 	image: {
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignContent: 'center',
-		height: 200,
-		width: 200,
-		borderRadius: 100,
+		height: 100,
+		width: 100,
+		borderRadius: 50,
 		borderWidth: 1,
 		borderColor: '#b3b3b3',
 		backgroundColor: '#d9dadb',
@@ -165,6 +177,17 @@ const styles = StyleSheet.create({
 	},
 	indicator: {
 		position: 'absolute',
+	},
+	info: {
+		flex: 1,
+		justifyContent: 'center',
+		paddingLeft: 10,
+	},
+	infoRow: {
+		flexDirection: 'row',
+	},
+	label: {
+		...globalStyles.label,
 	},
 });
 

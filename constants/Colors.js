@@ -26,7 +26,7 @@ export default {
 	disabledBackgroundColor: '#f7f7f7',
 
 	// Fields
-	fieldLabelColor: '#143F59',
+	fieldLabelColor: '#db5b1a',
 	fieldBackgroundColor: '#FFFFFF',
 	fieldBorderColor: '#bdbdbf',
 
