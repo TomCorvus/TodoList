@@ -3,10 +3,9 @@ import { StyleSheet, View, Text, ActivityIndicator, Animated } from 'react-nativ
 import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as immer from 'immer';
-import { setTodoList, checkTodo, deleteTodo } from '../../actions/TodoActions';
+import { setTodoList, editTodo, checkTodo, deleteTodo } from '../../actions/TodoActions';
 import HomeTodo from './HomeTodo';
 import HomeTodoHiddenElements from './HomeTodoHiddenElements';
-import HomeAddTodo from './HomeAddTodo';
 import globalStyles from '../../constants/Styles';
 import globalVariables from '../../constants/Variables';
 import globalColors from '../../constants/Colors';
@@ -15,9 +14,11 @@ class HomeList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			todoList: [],
 			dataLoaded: false,
+			todoList: this.props.todoList,
 		};
+		this.setEditForm = this.setEditForm.bind(this);
+		this.editTodo = this.editTodo.bind(this);
 		this.deleteTodo = this.deleteTodo.bind(this);
 		this.checkTodo = this.checkTodo.bind(this);
 		this.closeRow = this.closeRow.bind(this);
@@ -42,6 +43,7 @@ class HomeList extends React.Component {
 				todoData={rowData.item}
 				rowMap={rowMap}
 				checkTodo={this.checkTodo}
+				editTodo={this.editTodo}
 				closeRow={this.closeRow}
 				navigation={this.props.navigation}
 			/>
@@ -58,6 +60,7 @@ class HomeList extends React.Component {
 			<HomeTodoHiddenElements
 				todoData={rowData.item}
 				rowMap={rowMap}
+				setEditForm={this.setEditForm}
 				deleteTodo={this.deleteTodo}
 				closeRow={this.closeRow}
 				navigation={this.props.navigation}
@@ -72,8 +75,50 @@ class HomeList extends React.Component {
 		fetch('https://jsonplaceholder.typicode.com/todos/')
 			.then((response) => response.json())
 			.then((json) => {
-				this.props.setTodoList(json);
+				let newTodoList = immer.produce(json, (draftTodoList) => {
+					draftTodoList.forEach((todo) => {
+						todo.key = `${todo.id}`;
+						todo.animation = new Animated.Value(1);
+						todo.isEditing = false;
+					});
+				});
+
+				this.props.setTodoList(newTodoList);
 				this.setState({ dataLoaded: true });
+			})
+			.catch(function (error) {
+				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+			});
+	}
+
+	editTodo(id, title) {
+		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+			method: 'PATCH',
+			body: JSON.stringify({
+				title: title,
+			}),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		})
+			.then((response) => response.json())
+			.then((json) => {
+				this.props.editTodo(json);
+
+				let { todoList } = this.state;
+
+				let todoIndex = todoList.findIndex(function (todo) {
+					return todo.id === id;
+				});
+
+				let newTodoList = immer.produce(todoList, (draftTodoList) => {
+					draftTodoList[todoIndex].title = title;
+					delete draftTodoList[todoIndex].isEditing;
+				});
+
+				this.setState({
+					todoList: newTodoList,
+				});
 			})
 			.catch(function (error) {
 				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
@@ -119,6 +164,24 @@ class HomeList extends React.Component {
 			});
 	}
 
+	/**
+	 * Check todo by ID
+	 * @param {*} id
+	 */
+	setEditForm(id) {
+		let { todoList } = this.props;
+
+		let todoIndex = todoList.findIndex(function (todo) {
+			return todo.id === id;
+		});
+
+		let newTodoList = immer.produce(todoList, (draftTodoList) => {
+			draftTodoList[todoIndex].isEditing = true;
+		});
+
+		this.props.editTodo(newTodoList[todoIndex]);
+	}
+
 	componentDidUpdate(prevProps) {}
 
 	componentDidMount() {
@@ -162,7 +225,6 @@ class HomeList extends React.Component {
 								</View>
 							)}
 						</View>
-						<HomeAddTodo navigation={this.props.navigation} />
 					</>
 				) : (
 					<View style={styles.loaderContainer}>
@@ -185,6 +247,10 @@ function mapDispatchToProps(dispatch) {
 	return {
 		setTodoList: function (todoList) {
 			var action = setTodoList(todoList);
+			dispatch(action);
+		},
+		editTodo: function (todoInfo) {
+			var action = editTodo(todoInfo);
 			dispatch(action);
 		},
 		checkTodo: function (id, status) {

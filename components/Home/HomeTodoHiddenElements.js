@@ -57,7 +57,10 @@ class HomeTodoHiddenElements extends React.PureComponent {
 	 */
 	editTodo(todoID) {
 		this.props.closeRow(this.props.rowMap, this.props.todoData.key);
-		this.props.navigation.navigate('TodoForm', { todoID: todoID });
+		// this.props.navigation.navigate('TodoForm', { todoID: todoID });
+
+this.props.setEditForm(todoID);
+
 	}
 
 	componentDidUpdate(prevProps) {}

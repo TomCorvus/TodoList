@@ -101,7 +101,7 @@ class TodoInfo extends React.Component {
 							onPress={() => this._pickImage(id)}
 							activeOpacity={0.5}
 							underlayColor="transparent">
-							<>
+							<View>
 								{image ? (
 									<Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
 								) : (
@@ -119,7 +119,7 @@ class TodoInfo extends React.Component {
 										color={globalColors.headerBackgroundColor}
 									/>
 								)}
-							</>
+							</View>
 						</TouchableHighlight>
 						<View style={styles.info}>
 							<View style={styles.infoRow}>

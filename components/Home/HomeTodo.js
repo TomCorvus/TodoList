@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight, TouchableOpacity, Animated, TextInput } from 'react-native';
 import Icon from '../Global/Icon';
 import HomeTodoImage from './HomeTodoImage';
 import globalVariables from '../../constants/Variables';
@@ -10,9 +10,19 @@ class HomeTodo extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
+			title: this.props.todoData.title,
 			checked: this.props.todoData.completed,
 		};
 	}
+
+	/**
+	 * Set the title in the form state
+	 */
+	handlerChange = (text) => {
+		this.setState({
+			title: text.trim(),
+		});
+	};
 
 	/**
 	 * Navigate to Todo view
@@ -38,12 +48,22 @@ class HomeTodo extends React.PureComponent {
 		);
 	}
 
+	_onEdit(id) {
+		this.props.editTodo(id, this.state.title);
+	}
+
 	componentDidUpdate(prevProps) {}
 
 	componentDidMount() {}
 
 	render() {
 		let { todoData } = this.props;
+		let inputStyle = [styles.input],
+			{ isFocused } = this.state,
+			{ errorMessage } = this.props;
+
+		if (isFocused) inputStyle.push(styles.focusedInput);
+		if (errorMessage) inputStyle.push(styles.errorInput);
 
 		return (
 			<Animated.View
@@ -77,15 +97,27 @@ class HomeTodo extends React.PureComponent {
 							</View>
 						</TouchableHighlight>
 						<TouchableOpacity
+							disabled={todoData.isEditing}
 							activeOpacity={0.5}
 							onPress={() => this._onPress(todoData.id)}
 							style={styles.titleBtn}>
 							<View style={styles.titleWrapper}>
-								<Text
-									numberOfLines={1}
-									style={this.state.checked ? [styles.title, styles.checkedTitle] : styles.title}>
-									{todoData.title}
-								</Text>
+								{todoData.isEditing ? (
+									<TextInput
+										defaultValue={todoData.title}
+										style={inputStyle}
+										autoFocus={true}
+										returnKeyType="go"
+										onSubmitEditing={(event) => this._onEdit(todoData.id, this.state.title)}
+										onChangeText={(text) => this.handlerChange(text)}
+									/>
+								) : (
+									<Text
+										numberOfLines={1}
+										style={this.state.checked ? [styles.title, styles.checkedTitle] : styles.title}>
+										{todoData.title}
+									</Text>
+								)}
 								<HomeTodoImage todoID={todoData.id} todoImage={todoData.image} />
 								<Icon
 									name="angle-right-solid"
@@ -118,7 +150,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		alignContent: 'stretch',
+		justifyContent: 'center',
 		alignItems: 'center',
+		paddingRight: 5,
+		paddingLeft: 5,
 	},
 	titleBtn: {
 		flex: 1,
@@ -128,7 +163,11 @@ const styles = StyleSheet.create({
 		color: globalColors.textDefaultColor,
 		fontWeight: '400',
 		flex: 1,
-		paddingRight: 10,
+		paddingLeft: 5,
+		paddingRight: 5,
+		marginRight: 5,
+		borderColor: 'transparent',
+		borderWidth: 1,
 	},
 	checkedTitle: {
 		textDecorationLine: 'line-through',
@@ -136,7 +175,7 @@ const styles = StyleSheet.create({
 		color: globalColors.disabledTextColor,
 	},
 	checkboxAction: {
-		paddingRight: 10,
+		paddingRight: 5,
 		alignContent: 'center',
 		alignSelf: 'stretch',
 		justifyContent: 'center',
@@ -160,6 +199,24 @@ const styles = StyleSheet.create({
 		lineHeight: 20,
 		top: 4,
 		left: 5,
+	},
+	input: {
+		...globalStyles.field,
+		height: 40,
+		paddingLeft: 5,
+		paddingRight: 5,
+		marginBottom: 0,
+		marginRight: 5,
+	},
+	focusedInput: {
+		...globalStyles.focusedField,
+	},
+	errorInput: {
+		borderColor: globalColors.errorTextColor,
+	},
+	errorMessage: {
+		fontSize: globalVariables.fieldMessage,
+		color: globalColors.errorTextColor,
 	},
 });
 
