@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import HomeFormField from './HomeFormField';
 import HomeLists from './HomeList';
 
 class HomeBody extends React.PureComponent {
@@ -12,7 +13,12 @@ class HomeBody extends React.PureComponent {
 	componentDidMount() {}
 
 	render() {
-		return <HomeLists navigation={this.props.navigation} />;
+		return (
+			<>
+				<HomeFormField navigation={this.props.navigation} />
+				<HomeLists navigation={this.props.navigation} />
+			</>
+		);
 	}
 }
 
