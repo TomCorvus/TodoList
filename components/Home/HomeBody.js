@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
+import HomeLists from './HomeList';
 
 class HomeBody extends React.PureComponent {
 	constructor(props) {
@@ -11,7 +12,7 @@ class HomeBody extends React.PureComponent {
 	componentDidMount() {}
 
 	render() {
-		return <Text>Liste des Todos</Text>;
+		return <HomeLists navigation={this.props.navigation} />;
 	}
 }
 

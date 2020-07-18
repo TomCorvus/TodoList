@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import { SplashScreen } from 'expo';
+import Icon from '../components/Global/Icon';
 import HomeWrapper from '../components/Home/HomeWrapper';
 
 class HomeScreen extends React.Component {
@@ -16,13 +17,17 @@ class HomeScreen extends React.Component {
 	async loadResourcesAndDataAsync() {
 		try {
 			SplashScreen.preventAutoHide();
+
+			// Load fonts
+			await Font.loadAsync({
+				...Icon.font,
+			});
 		} catch (e) {
 			console.warn(e);
 		} finally {
 			this.setState(
 				{
 					isLoadingComplete: true,
-					dataLoaded: true,
 				},
 				() => SplashScreen.hide()
 			);
@@ -34,7 +39,7 @@ class HomeScreen extends React.Component {
 			<View style={styles.container}>
 				{this.state.isLoadingComplete && (
 					<>
-						<HomeWrapper dataLoaded={this.state.dataLoaded} />
+						<HomeWrapper />
 					</>
 				)}
 			</View>

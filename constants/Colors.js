@@ -4,7 +4,7 @@ export default {
 	iconDefaultColor: '#c8c8cd',
 
 	// Header
-	headerBackgroundColor: '#048b9a',
+	headerBackgroundColor: '#FF7E3C',
 	headerTitleColor: '#FFFFFF',
 	headerIconColor: '#FFFFFF',
 	headerActiveIconColor: '#04a1e0',
