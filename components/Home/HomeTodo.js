@@ -9,7 +9,7 @@ class HomeTodo extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
-			checked: false,
+			checked: this.props.todoData.completed,
 		};
 	}
 
@@ -25,10 +25,15 @@ class HomeTodo extends React.PureComponent {
 	/**
 	 * Check/uncheck todo
 	 */
-	_onCheck() {
-		this.setState({
-			checked: !this.state.checked,
-		});
+	_onCheck(id) {
+		this.setState(
+			{
+				checked: !this.state.checked,
+			},
+			() => {
+				this.props.checkTodo(id, this.state.checked);
+			}
+		);
 	}
 
 	componentDidUpdate(prevProps) {}
@@ -54,7 +59,7 @@ class HomeTodo extends React.PureComponent {
 					<View style={styles.container}>
 						<TouchableHighlight
 							style={styles.checkboxAction}
-							onPress={() => this._onCheck()}
+							onPress={() => this._onCheck(todoData.id)}
 							activeOpacity={0.5}
 							underlayColor="transparent">
 							<View
@@ -70,7 +75,7 @@ class HomeTodo extends React.PureComponent {
 							</View>
 						</TouchableHighlight>
 						<View style={styles.titleWrapper}>
-							<Text numberOfLines={1} style={styles.title}>
+							<Text numberOfLines={1} style={this.state.checked ? [styles.title, styles.checkedTitle] : styles.title}>
 								{todoData.title}
 							</Text>
 						</View>
@@ -102,6 +107,11 @@ const styles = StyleSheet.create({
 		fontSize: globalVariables.globalFontSize,
 		color: globalColors.textDefaultColor,
 		fontWeight: '500',
+	},
+	checkedTitle: {
+		textDecorationLine: 'line-through',
+		textDecorationStyle: 'solid',
+		color: globalColors.disabledTextColor,
 	},
 	checkboxAction: {
 		paddingRight: 10,

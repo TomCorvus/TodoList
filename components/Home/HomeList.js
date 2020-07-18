@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, ActivityIndicator, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { setTodoList, deleteTodo } from '../../actions/TodoActions';
+import { setTodoList, checkTodo, deleteTodo } from '../../actions/TodoActions';
 import HomeTodo from './HomeTodo';
 import HomeTodoHiddenElements from './HomeTodoHiddenElements';
 import globalStyles from '../../constants/Styles';
@@ -17,6 +17,7 @@ class HomeList extends React.Component {
 			dataLoaded: false,
 		};
 		this.deleteTodo = this.deleteTodo.bind(this);
+		this.checkTodo = this.checkTodo.bind(this);
 		this.closeRow = this.closeRow.bind(this);
 	}
 
@@ -38,6 +39,7 @@ class HomeList extends React.Component {
 			<HomeTodo
 				todoData={rowData.item}
 				rowMap={rowMap}
+				checkTodo={this.checkTodo}
 				closeRow={this.closeRow}
 				navigation={this.props.navigation}
 			/>
@@ -90,6 +92,29 @@ class HomeList extends React.Component {
 		})
 			.then(() => {
 				this.props.deleteTodo(id);
+			})
+			.catch(function (error) {
+				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+			});
+	}
+
+	/**
+	 * Delete todo by ID
+	 * @param {*} id
+	 */
+	checkTodo(id, status) {
+		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				completed: status,
+			}),
+			headers: {
+				'Content-type': 'application/json; charset=UTF-8',
+			},
+		})
+			.then((response) => response.json())
+			.then((json) => {
+				this.props.checkTodo(id, status);
 			})
 			.catch(function (error) {
 				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
@@ -154,6 +179,10 @@ function mapDispatchToProps(dispatch) {
 	return {
 		setTodoList: function (todoList) {
 			var action = setTodoList(todoList);
+			dispatch(action);
+		},
+		checkTodo: function (id, status) {
+			var action = checkTodo(id, status);
 			dispatch(action);
 		},
 		deleteTodo: function (id) {

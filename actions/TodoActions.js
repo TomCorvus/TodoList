@@ -1,4 +1,4 @@
-import { SET_TODOLIST, ADD_TODO, DELETE_TODO } from './TodoActionsTypes';
+import { SET_TODOLIST, ADD_TODO, CHECK_TODO, DELETE_TODO } from './TodoActionsTypes';
 
 /**
  * Set todo list
@@ -19,6 +19,19 @@ export function addTodo(todo) {
 	return {
 		type: ADD_TODO,
 		todo: todo,
+	};
+}
+
+/**
+ * Check todo
+ * @param {*} id
+ * @param {*} status
+ */
+export function checkTodo(id, status) {
+	return {
+		type: CHECK_TODO,
+		id: id,
+		status: status,
 	};
 }
 

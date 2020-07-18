@@ -22,6 +22,15 @@ export default function TodoReducer(state = stateInit, action) {
 		case 'ADD_TODO': {
 			return state;
 		}
+
+		case 'CHECK_TODO': {
+			let todoIndex = getTodoIndex(action.id, state.todoList),
+				newState = immer.produce(state, (draftState) => {
+					draftState.todoList[todoIndex].completed = action.status;
+				});
+
+			return newState;
+		}
 		case 'DELETE_TODO': {
 			let todoIndex = getTodoIndex(action.id, state.todoList),
 				newState = immer.produce(state, (draftState) => {
