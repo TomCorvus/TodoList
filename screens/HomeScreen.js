@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
 import { SplashScreen } from 'expo';
+import * as Font from 'expo-font';
 import Icon from '../components/Global/Icon';
 import HomeWrapper from '../components/Home/HomeWrapper';
 
