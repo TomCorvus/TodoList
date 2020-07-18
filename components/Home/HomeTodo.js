@@ -14,12 +14,13 @@ class HomeTodo extends React.PureComponent {
 	}
 
 	/**
-	 * Navigate to List view
-	 * @param {*} listID
+	 * Navigate to Todo view
+	 * @param {*} todoID
 	 */
-	_onPress() {
+	_onPress(todoID) {
 		const { navigation, rowMap, todoData, closeRow } = this.props;
 		closeRow(rowMap, todoData.key);
+		navigation.navigate('Todo', { todoID: todoID });
 	}
 
 	/**
@@ -74,11 +75,23 @@ class HomeTodo extends React.PureComponent {
 								)}
 							</View>
 						</TouchableHighlight>
-						<View style={styles.titleWrapper}>
-							<Text numberOfLines={1} style={this.state.checked ? [styles.title, styles.checkedTitle] : styles.title}>
-								{todoData.title}
-							</Text>
-						</View>
+						<TouchableHighlight
+							onPress={() => this._onPress(todoData.id)}
+							style={styles.titleBtn}
+							underlayColor={globalColors.baseTouchableHighlightUnderlayColor}>
+							<View style={styles.titleWrapper}>
+								<Text
+									numberOfLines={1}
+									style={this.state.checked ? [styles.title, styles.checkedTitle] : styles.title}>
+									{todoData.title}
+								</Text>
+								<Icon
+									name="angle-right-solid"
+									size={globalVariables.globalIconFontSize}
+									color={globalColors.iconDefaultColor}
+								/>
+							</View>
+						</TouchableHighlight>
 					</View>
 				</View>
 			</Animated.View>
@@ -101,12 +114,19 @@ const styles = StyleSheet.create({
 	},
 	titleWrapper: {
 		flex: 1,
-		paddingRight: 10,
+		flexDirection: 'row',
+		alignContent: 'stretch',
+		alignItems: 'center',
+	},
+	titleBtn: {
+		flex: 1,
 	},
 	title: {
 		fontSize: globalVariables.globalFontSize,
 		color: globalColors.textDefaultColor,
 		fontWeight: '500',
+		flex: 1,
+		paddingRight: 10,
 	},
 	checkedTitle: {
 		textDecorationLine: 'line-through',

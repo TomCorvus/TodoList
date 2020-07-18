@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../../screens/HomeScreen';
+import TodoScreen from '../../screens/TodoScreen';
 
 const Stack = createStackNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -20,6 +21,7 @@ export class AppNavigator extends React.Component {
 					}}
 					headerMode="float">
 					<Stack.Screen name="Home" component={HomeScreen} />
+					<Stack.Screen name="Todo" component={TodoScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		);
