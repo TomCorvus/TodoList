@@ -45,7 +45,6 @@ class HomeFormField extends React.Component {
 	 * @param {*} title
 	 */
 	checkTodoTitle(title) {
-		throw new Error ('not performing tonight!')
 		let validTitle = false,
 			noSpacesTitle = title.toString().replace(/\s/g, '');
 
@@ -98,7 +97,7 @@ class HomeFormField extends React.Component {
 						this.setState({ title: '', isSubmitting: false });
 					})
 					.catch(function () {
-						Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
+						Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 					});
 			} else {
 				this.setState({ isSubmitting: false });

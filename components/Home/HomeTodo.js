@@ -1,5 +1,14 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight, TouchableOpacity, Animated, TextInput } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	Text,
+	TouchableHighlight,
+	TouchableOpacity,
+	Animated,
+	TextInput,
+	ActivityIndicator,
+} from 'react-native';
 import Icon from '../Global/Icon';
 import HomeTodoImage from './HomeTodoImage';
 import globalVariables from '../../constants/Variables';
@@ -13,6 +22,7 @@ class HomeTodo extends React.PureComponent {
 			title: this.props.todoData.title,
 			errorMessage: null,
 			checked: this.props.todoData.completed,
+			isSubmitting: false,
 		};
 	}
 
@@ -55,12 +65,20 @@ class HomeTodo extends React.PureComponent {
 	 * @param {*} todoID
 	 */
 	_onEdit(todoID) {
-		let validTitle = this.checkTodoTitle(this.state.title);
+		this.setState(
+			{
+				isSubmitting: true,
+				errorMessage: null,
+			},
+			() => {
+				let validTitle = this.checkTodoTitle(this.state.title);
 
-		// Check if the title is not empty
-		if (validTitle) {
-			this.props.editTodo(todoID, this.state.title);
-		}
+				// Check if the title is not empty
+				if (validTitle) {
+					this.props.editTodo(todoID, this.state.title);
+				}
+			}
+		);
 	}
 
 	/**
@@ -84,14 +102,25 @@ class HomeTodo extends React.PureComponent {
 		return validTitle;
 	}
 
-	componentDidUpdate(prevProps) {}
+	componentDidUpdate(prevProps) {
+		if (prevProps.todoData.isEditing !== this.props.todoData.isEditing) {
+			this.setState({
+				isSubmitting: false,
+			});
+		}
+		if (this.props.todoData.isEditing && this.state.errorMessage) {
+			this.setState({
+				isSubmitting: false,
+			});
+		}
+	}
 
 	componentDidMount() {}
 
 	render() {
 		let { todoData } = this.props,
-			inputStyle = [styles.input],
-			{ errorMessage, isFocused } = this.state;
+			inputStyle = [styles.inputWrapper],
+			{ errorMessage, isFocused, isSubmitting } = this.state;
 
 		if (isFocused) inputStyle.push(styles.focusedInput);
 		if (errorMessage) inputStyle.push(styles.errorInput);
@@ -134,18 +163,26 @@ class HomeTodo extends React.PureComponent {
 							style={styles.titleBtn}>
 							<View style={styles.titleWrapper}>
 								{todoData.isEditing ? (
-									<TextInput
-										placeholder={errorMessage ? errorMessage : ''}
-										placeholderTextColor={
-											errorMessage ? globalColors.errorTextColor + 'a8' : 'transparent'
-										}
-										defaultValue={todoData.title}
-										style={inputStyle}
-										autoFocus={true}
-										returnKeyType="send"
-										onSubmitEditing={() => this._onEdit(todoData.id, this.state.title)}
-										onChangeText={(text) => this.handlerChange(text)}
-									/>
+									<View style={inputStyle}>
+										<TextInput
+											placeholder={errorMessage ? errorMessage : ''}
+											placeholderTextColor={
+												errorMessage ? globalColors.errorTextColor + 'a8' : 'transparent'
+											}
+											defaultValue={todoData.title}
+											style={styles.input}
+											autoFocus={true}
+											returnKeyType="send"
+											onSubmitEditing={() => this._onEdit(todoData.id, this.state.title)}
+											onChangeText={(text) => this.handlerChange(text)}
+										/>
+										{isSubmitting && (
+											<ActivityIndicator
+												size="small"
+												color={globalColors.headerBackgroundColor}
+											/>
+										)}
+									</View>
 								) : (
 									<Text
 										numberOfLines={1}
@@ -235,13 +272,22 @@ const styles = StyleSheet.create({
 		top: 4,
 		left: 5,
 	},
-	input: {
+	inputWrapper: {
 		...globalStyles.field,
-		height: 40,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
 		paddingLeft: 5,
 		paddingRight: 5,
 		marginBottom: 0,
 		marginRight: 5,
+	},
+	input: {
+		...globalStyles.field,
+		marginBottom: 0,
+		borderWidth: 0,
+		height: 30,
+		padding: 0,
 	},
 	focusedInput: {
 		...globalStyles.focusedField,

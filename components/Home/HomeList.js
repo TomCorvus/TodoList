@@ -122,22 +122,6 @@ class HomeList extends React.Component {
 	}
 
 	/**
-	 * Delete todo by ID
-	 * @param {*} id
-	 */
-	deleteTodo(id) {
-		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
-			method: 'DELETE',
-		})
-			.then(() => {
-				this.props.deleteTodo(id);
-			})
-			.catch(function () {
-				Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
-			});
-	}
-
-	/**
 	 * Check todo by ID
 	 * @param {*} id
 	 */
@@ -154,6 +138,22 @@ class HomeList extends React.Component {
 			.then((response) => response.json())
 			.then((json) => {
 				this.props.checkTodo(id, status);
+			})
+			.catch(function () {
+				Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
+			});
+	}
+
+	/**
+	 * Delete todo by ID
+	 * @param {*} id
+	 */
+	deleteTodo(id) {
+		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
+			method: 'DELETE',
+		})
+			.then(() => {
+				this.props.deleteTodo(id);
 			})
 			.catch(function () {
 				Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');

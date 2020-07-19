@@ -21,7 +21,7 @@ export default {
 	secondaryButtonIconSize: 20,
 
 	// Field
-	fieldHeight: 50,
+	fieldHeight: 40,
 	fieldMessage: 12,
 	fieldBorderRadius: 2,
 
