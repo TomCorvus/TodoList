@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import globalStyles from '../../constants/Styles';
+import globalVariables from '../../constants/Variables';
+import globalColors from '../../constants/Colors';
 
 class ErrorBoundary extends React.Component {
 	constructor(props) {
@@ -19,7 +21,9 @@ class ErrorBoundary extends React.Component {
 			return (
 				<View style={styles.wrapper}>
 					<View style={styles.inner}>
-						<Text>Une erreur est survenue</Text>
+						<View style={styles.error}>
+							<Text style={styles.errorText}>Une erreur est survenue...</Text>
+						</View>
 					</View>
 				</View>
 			);
@@ -34,6 +38,16 @@ const styles = StyleSheet.create({
 	},
 	inner: {
 		...globalStyles.innerBodyPage,
+	},
+	error: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	errorText: {
+		marginTop: -globalVariables.headerHeight,
+		color: globalColors.attributsColor,
+		opacity: 0.5,
 	},
 });
 
