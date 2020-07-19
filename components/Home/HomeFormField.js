@@ -114,29 +114,16 @@ class HomeFormField extends React.Component {
 		const { title, titleErrorMessage, isSubmitting } = this.state;
 
 		return (
-			<>
-				<View style={styles.wrapper}>
-					<KeyboardAvoidingView
-						behavior={Platform.OS == 'ios' ? 'padding' : null}
-						style={styles.keyboardView}
-						keyboardVerticalOffset={globalVariables.headerHeight}>
-						<ScrollView nestedScrollEnabled={true} style={styles.container} ref={'_fieldsScrollView'}>
-							<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-								<View style={styles.inner}>
-									<HomeFormTitle
-										title={title}
-										setTodoTitle={this.setTodoTitle}
-										_onSubmit={this._onSubmit}
-										ref={this.childRef}
-										isSubmitting={isSubmitting}
-										errorMessage={titleErrorMessage}
-									/>
-								</View>
-							</TouchableWithoutFeedback>
-						</ScrollView>
-					</KeyboardAvoidingView>
-				</View>
-			</>
+			<View style={styles.container}>
+				<HomeFormTitle
+					title={title}
+					setTodoTitle={this.setTodoTitle}
+					_onSubmit={this._onSubmit}
+					ref={this.childRef}
+					isSubmitting={isSubmitting}
+					errorMessage={titleErrorMessage}
+				/>
+			</View>
 		);
 	}
 }
@@ -161,10 +148,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 const styles = StyleSheet.create({
-	keyboardView: {},
-	wrapper: {},
-	container: {},
-	inner: {},
+	container: {
+		padding: globalStyles.innerBodyPage.padding,
+	},
 	submitButton: {
 		...globalStyles.btn,
 		backgroundColor: globalColors.primaryButtonBackgroundColor,

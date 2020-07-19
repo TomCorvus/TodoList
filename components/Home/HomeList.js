@@ -1,5 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Text, ActivityIndicator, Animated } from 'react-native';
+import {
+	StyleSheet,
+	View,
+	Text,
+	ActivityIndicator,
+	Animated,
+	Platform,
+	Keyboard,
+	KeyboardAvoidingView,
+	TouchableWithoutFeedback,
+} from 'react-native';
 import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import * as immer from 'immer';
@@ -205,25 +215,32 @@ class HomeList extends React.Component {
 				{this.state.dataLoaded ? (
 					<>
 						<View style={styles.container}>
-							{todoList.length > 0 ? (
-								<SwipeListView
-									data={newTodoList}
-									renderItem={this._renderList}
-									renderHiddenItem={this._renderHiddenProductActions}
-									rightOpenValue={-150}
-									previewRowKey={keyForSwipePreview}
-									previewOpenValue={-50}
-									previewOpenDelay={800}
-									previewDuration={400}
-									useNativeDriver={false}
-									disableRightSwipe
-									recalculateHiddenLayout={true}
-								/>
-							) : (
-								<View style={styles.emptyList}>
-									<Text style={styles.emptyListText}>Aucun todo</Text>
-								</View>
-							)}
+							<KeyboardAvoidingView
+								behavior={Platform.OS == 'ios' ? 'padding' : null}
+								style={styles.keyboardView}
+								keyboardVerticalOffset={globalVariables.headerHeight + 90}>
+								<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+									{todoList.length > 0 ? (
+										<SwipeListView
+											data={newTodoList}
+											renderItem={this._renderList}
+											renderHiddenItem={this._renderHiddenProductActions}
+											rightOpenValue={-150}
+											previewRowKey={keyForSwipePreview}
+											previewOpenValue={-50}
+											previewOpenDelay={800}
+											previewDuration={400}
+											useNativeDriver={false}
+											disableRightSwipe
+											recalculateHiddenLayout={true}
+										/>
+									) : (
+										<View style={styles.emptyList}>
+											<Text style={styles.emptyListText}>Aucun todo</Text>
+										</View>
+									)}
+								</TouchableWithoutFeedback>
+							</KeyboardAvoidingView>
 						</View>
 					</>
 				) : (
@@ -265,6 +282,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 const styles = StyleSheet.create({
+	keyboardView: {
+		flex: 1,
+	},
 	wrapper: {
 		...globalStyles.bodyPage,
 	},

@@ -34,7 +34,7 @@ export function editTodo(todoInfo) {
 }
 
 /**
- * Check todo
+ * Check/uncheck todo
  * @param {*} id
  * @param {*} status
  */

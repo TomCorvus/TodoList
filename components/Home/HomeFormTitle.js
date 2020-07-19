@@ -60,7 +60,7 @@ class HomeFormTitle extends React.PureComponent {
 		if (errorMessage) inputStyle.push(styles.errorInput);
 
 		return (
-			<View style={styles.container} onLayout={this._onLayout}>
+			<View style={styles.container}>
 				<View style={this.state.isFocused ? [styles.inputWrapper, styles.focusedInput] : styles.inputWrapper}>
 					<TextInput
 						placeholder={"Qu'avez-vous à faire aujourdhui ?"}
@@ -99,15 +99,10 @@ class HomeFormTitle extends React.PureComponent {
 const styles = StyleSheet.create({
 	container: {
 		...globalStyles.formGroup,
-		marginTop: globalStyles.formGroup.marginBottom,
-		paddingLeft: globalStyles.innerBodyPage.padding,
-		paddingRight: globalStyles.innerBodyPage.padding,
-	},
-	label: {
-		...globalStyles.label,
+		marginTop: 0,
+		marginBottom: 0,
 	},
 	inputWrapper: {
-		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -121,7 +116,6 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderRightWidth: 0,
 		borderTopRightRadius: 0,
-		borderBottomLeftRadius: 0,
 		borderBottomRightRadius: 0,
 	},
 	focusedInput: {
@@ -134,6 +128,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		borderTopRightRadius: globalVariables.fieldBorderRadius,
+		borderBottomRightRadius: globalVariables.fieldBorderRadius,
 	},
 	errorInput: {
 		borderColor: globalColors.errorTextColor,

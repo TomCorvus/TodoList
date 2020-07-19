@@ -107,7 +107,7 @@ class HomeTodo extends React.PureComponent {
 										defaultValue={todoData.title}
 										style={inputStyle}
 										autoFocus={true}
-										returnKeyType="go"
+										returnKeyType="send"
 										onSubmitEditing={(event) => this._onEdit(todoData.id, this.state.title)}
 										onChangeText={(text) => this.handlerChange(text)}
 									/>
