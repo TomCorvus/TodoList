@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
 	wrapper: {
 		...globalStyles.bodyPage,
 	},
-	container: {},
 	inner: {
 		...globalStyles.innerBodyPage,
 	},

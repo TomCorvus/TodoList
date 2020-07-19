@@ -45,6 +45,7 @@ class HomeFormField extends React.Component {
 	 * @param {*} title
 	 */
 	checkTodoTitle(title) {
+		throw new Error ('not performing tonight!')
 		let validTitle = false,
 			noSpacesTitle = title.toString().replace(/\s/g, '');
 

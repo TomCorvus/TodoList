@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import HomeFormField from './HomeFormField';
+import ErrorBoundary from '../Global/ErrorBoundary';
 import HomeLists from './HomeList';
 
 class HomeBody extends React.PureComponent {
@@ -14,10 +15,10 @@ class HomeBody extends React.PureComponent {
 
 	render() {
 		return (
-			<>
+			<ErrorBoundary>
 				<HomeFormField navigation={this.props.navigation} />
 				<HomeLists navigation={this.props.navigation} />
-			</>
+			</ErrorBoundary>
 		);
 	}
 }
