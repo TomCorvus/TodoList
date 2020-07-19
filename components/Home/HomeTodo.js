@@ -30,7 +30,7 @@ class HomeTodo extends React.PureComponent {
 	 * Set the title in state when the editing status is true
 	 * @param {*} text
 	 */
-	handlerChange = (text) => {
+	_onChange = (text) => {
 		this.setState({
 			title: text.trim(),
 		});
@@ -38,46 +38,46 @@ class HomeTodo extends React.PureComponent {
 
 	/**
 	 * Navigate to Todo view
-	 * @param {*} todoID
+	 * @param {*} id
 	 */
-	_onPress(todoID) {
+	_onPress(id) {
 		const { navigation, rowMap, todoData, closeRow } = this.props;
 		closeRow(rowMap, todoData.key);
-		navigation.navigate('Todo', { todoID: todoID });
+		navigation.navigate('Todo', { todoID: id });
 	}
 
 	/**
 	 * Check/uncheck todo
+	 * @param {*} id
 	 */
-	_onCheck(todoID) {
+	_onCheck(id) {
 		this.setState(
 			{
 				checked: !this.state.checked,
 			},
 			() => {
-				this.props.checkTodo(todoID, this.state.checked);
+				this.props.checkTodo(id, this.state.checked);
 			}
 		);
 	}
 
 	/**
 	 * Update todo's title
-	 * @param {*} todoID
+	 * @param {*} id
 	 */
-	_onEdit(todoID) {
+	_onEdit(id) {
 		this.setState(
 			{
 				isSubmitting: true,
 				errorMessage: null,
 			},
 			() => {
-				let validTitle = this.checkTodoTitle(this.state.title);
+				let validTitle = this._checkTodoTitle(this.state.title);
 
-				// Check if the title is not empty
+				// Check if the title is not empty and valid
 				if (validTitle) {
-
 					// Send todo's image in parameter to avoid to delete it because the image is not save on the server
-					this.props.editTodo(todoID, this.state.title, this.props.todoData.image);
+					this.props.editTodo(id, this.state.title, this.props.todoData.image);
 				}
 			}
 		);
@@ -87,7 +87,7 @@ class HomeTodo extends React.PureComponent {
 	 * Check if todo title is valid
 	 * @param {*} title
 	 */
-	checkTodoTitle(title) {
+	_checkTodoTitle(title) {
 		let validTitle = false,
 			noSpacesTitle = title.toString().replace(/\s/g, '');
 
@@ -105,7 +105,10 @@ class HomeTodo extends React.PureComponent {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.todoData.isEditing !== this.props.todoData.isEditing || this.props.todoData.isEditing && this.state.errorMessage) {
+		if (
+			prevProps.todoData.isEditing !== this.props.todoData.isEditing ||
+			(this.props.todoData.isEditing && this.state.errorMessage)
+		) {
 			this.setState({
 				isSubmitting: false,
 			});
@@ -171,7 +174,7 @@ class HomeTodo extends React.PureComponent {
 											autoFocus={true}
 											returnKeyType="send"
 											onSubmitEditing={() => this._onEdit(todoData.id, this.state.title)}
-											onChangeText={(text) => this.handlerChange(text)}
+											onChangeText={(text) => this._onChange(text)}
 										/>
 										{isSubmitting && (
 											<ActivityIndicator

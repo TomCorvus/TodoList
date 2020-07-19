@@ -67,13 +67,13 @@ class HomeFormField extends React.Component {
 	_onSubmit() {
 		const { title } = this.state;
 
-		// Set the submitting status to the form
+		// Set submit status to the form
 		this.setState({ isSubmitting: true }, () => {
 			let validTitle = this.checkTodoTitle(title);
 
 			// Check if the title is not empty
 			if (validTitle) {
-				// POST the todo to the server
+				// Save modifications on the server
 				fetch('https://jsonplaceholder.typicode.com/todos', {
 					method: 'POST',
 					body: JSON.stringify({
@@ -91,9 +91,9 @@ class HomeFormField extends React.Component {
 						this.props.addTodo(json);
 
 						// Clear the field
-						this.childRef.current._clearField();
+						this.childRef.current._onClear();
 
-						// Empty the form state and disable the submitting status
+						// Empty the form state and disable submit status
 						this.setState({ title: '', isSubmitting: false });
 					})
 					.catch(function () {

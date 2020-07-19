@@ -28,10 +28,10 @@ class HomeList extends React.Component {
 			dataLoaded: false,
 			todoList: this.props.todoList,
 		};
-		this.setEditForm = this.setEditForm.bind(this);
 		this.editTodo = this.editTodo.bind(this);
-		this.deleteTodo = this.deleteTodo.bind(this);
 		this.checkTodo = this.checkTodo.bind(this);
+		this.deleteTodo = this.deleteTodo.bind(this);
+		this.setEditForm = this.setEditForm.bind(this);
 		this.closeRow = this.closeRow.bind(this);
 	}
 
@@ -45,10 +45,11 @@ class HomeList extends React.Component {
 	};
 
 	/**
-	 * Render todo list
-	 * @param {*} list
+	 * Render each todo
+	 * @param {*} rowData
+	 * @param {*} rowMap
 	 */
-	_renderList = (rowData, rowMap) => {
+	_renderTodo = (rowData, rowMap) => {
 		return (
 			<HomeTodo
 				todoData={rowData.item}
@@ -62,7 +63,7 @@ class HomeList extends React.Component {
 	};
 
 	/**
-	 * Render hidden actions behind each todo row
+	 * Render hidden actions behind each todo
 	 * @param {*} rowData
 	 * @param {*} rowMap
 	 */
@@ -82,18 +83,18 @@ class HomeList extends React.Component {
 	/**
 	 * Retrieve todos
 	 */
-	getDatas() {
+	getTodo() {
 		fetch('https://jsonplaceholder.typicode.com/todos/')
 			.then((response) => response.json())
 			.then((json) => {
+				// Add some attributs on each object for RN operation
 				let newTodoList = immer.produce(json, (draftTodoList) => {
 					draftTodoList.forEach((todo) => {
-						todo.key = `${todo.id}`;
-						todo.animation = new Animated.Value(1);
 						todo.isEditing = false;
 					});
 				});
 
+				// Save data in Redux state and display results
 				this.props.setTodoList(newTodoList);
 				this.setState({ dataLoaded: true });
 			})
@@ -102,7 +103,15 @@ class HomeList extends React.Component {
 			});
 	}
 
+	/**
+	 * Edit title of the todo (image in parameters in only here to avoid
+	 * to delete it because it's not save on the server)
+	 * @param {*} id
+	 * @param {*} title
+	 * @param {*} image
+	 */
 	editTodo(id, title, image) {
+		// Save modifications on the server
 		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
 			method: 'PATCH',
 			body: JSON.stringify({
@@ -115,6 +124,7 @@ class HomeList extends React.Component {
 		})
 			.then((response) => response.json())
 			.then((json) => {
+				// Update Redux state
 				this.props.editTodo(json);
 			})
 			.catch(function () {
@@ -125,8 +135,10 @@ class HomeList extends React.Component {
 	/**
 	 * Check todo by ID
 	 * @param {*} id
+	 * @param {*} status
 	 */
 	checkTodo(id, status) {
+		// Save modifications on the server
 		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -138,6 +150,7 @@ class HomeList extends React.Component {
 		})
 			.then((response) => response.json())
 			.then((json) => {
+				// Update Redux state
 				this.props.checkTodo(id, status);
 			})
 			.catch(function () {
@@ -150,10 +163,12 @@ class HomeList extends React.Component {
 	 * @param {*} id
 	 */
 	deleteTodo(id) {
+		// Delete todo on the server
 		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
 			method: 'DELETE',
 		})
 			.then(() => {
+				// Update Redux state
 				this.props.deleteTodo(id);
 			})
 			.catch(function () {
@@ -162,40 +177,39 @@ class HomeList extends React.Component {
 	}
 
 	/**
-	 * Check todo by ID
+	 * Set editing status to todo
 	 * @param {*} id
 	 */
 	setEditForm(id) {
-		let { todoList } = this.props;
+		let { todoList } = this.props,
+			todoIndex = todoList.findIndex(function (todo) {
+				return todo.id === id;
+			});
 
-		let todoIndex = todoList.findIndex(function (todo) {
-			return todo.id === id;
-		});
+		if (todoIndex !== -1) {
+			let newTodoList = immer.produce(todoList, (draftTodoList) => {
+				draftTodoList[todoIndex].isEditing = true;
+			});
 
-		let newTodoList = immer.produce(todoList, (draftTodoList) => {
-			draftTodoList[todoIndex].isEditing = true;
-		});
-
-		this.props.editTodo(newTodoList[todoIndex]);
+			this.props.editTodo(newTodoList[todoIndex]);
+		}
 	}
 
 	componentDidUpdate(prevProps) {}
 
 	componentDidMount() {
-		this.getDatas();
+		this.getTodo();
 	}
 
 	render() {
-		// Récupération des données construites pour la FlatList
 		let todoList = this.props.todoList,
-			keyForSwipePreview = '1';
-
-		let newTodoList = immer.produce(todoList, (draftTodoList) => {
-			draftTodoList.forEach((todo) => {
-				todo.key = `${todo.id}`;
-				todo.animation = new Animated.Value(1);
+			keyForSwipePreview = '1',
+			newTodoList = immer.produce(todoList, (draftTodoList) => {
+				draftTodoList.forEach((todo) => {
+					todo.key = `${todo.id}`;
+					todo.animation = new Animated.Value(1);
+				});
 			});
-		});
 
 		return (
 			<View style={styles.wrapper}>
@@ -210,7 +224,7 @@ class HomeList extends React.Component {
 									{todoList.length > 0 ? (
 										<SwipeListView
 											data={newTodoList}
-											renderItem={this._renderList}
+											renderItem={this._renderTodo}
 											renderHiddenItem={this._renderHiddenProductActions}
 											rightOpenValue={-150}
 											previewRowKey={keyForSwipePreview}
@@ -286,7 +300,7 @@ const styles = StyleSheet.create({
 	},
 	loaderMessage: {
 		marginTop: 5,
-		color: globalColors.headerBackgroundColor,
+		color: globalColors.attributsColor,
 	},
 	emptyList: {
 		flex: 1,

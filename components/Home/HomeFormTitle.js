@@ -34,14 +34,14 @@ class HomeFormTitle extends React.PureComponent {
 	/**
 	 * Set the title in the form state
 	 */
-	handlerChange = (text) => {
+	_onChange = (text) => {
 		this.props.setTodoTitle(text.trim());
 	};
 
 	/**
 	 * Clear the input value
 	 */
-	_clearField() {
+	_onClear() {
 		this.textInput.clear();
 	}
 
@@ -69,7 +69,7 @@ class HomeFormTitle extends React.PureComponent {
 						}}
 						onBlur={() => this._onBlur()}
 						onFocus={() => this._onFocus()}
-						onChangeText={(text) => this.handlerChange(text)}
+						onChangeText={(text) => this._onChange(text)}
 						onSubmitEditing={() => this.props._onSubmit()}
 					/>
 					<TouchableHighlight

@@ -11,17 +11,17 @@ class HomeTodoHiddenElements extends React.PureComponent {
 	}
 
 	/**
-	 * Confirm to delete todo
-	 * @param {*} todoID
+	 * Confirm to delete todo (only on smartphones)
+	 * @param {*} id
 	 */
-	_confirmDeleteTodo(todoID) {
+	_confirmDeleteTodo(id) {
 		Alert.alert(
 			'Supprimer cette tâche ?',
 			'Cette action est définitive.',
 			[
 				{
 					text: 'Supprimer',
-					onPress: () => this._deleteTodo(todoID),
+					onPress: () => this._deleteTodo(id),
 					style: 'destructive',
 				},
 				{
@@ -34,10 +34,10 @@ class HomeTodoHiddenElements extends React.PureComponent {
 	}
 
 	/**
-	 *	Delete todo in database
-	 * @param {*} todoID
+	 *	Handler to delete todo
+	 * @param {*} id
 	 */
-	_deleteTodo(todoID) {
+	_deleteTodo(id) {
 		// Start the animation and delete the todo
 		if (!this.animationIsRunning) {
 			Animated.timing(this.props.todoData.animation, {
@@ -45,7 +45,8 @@ class HomeTodoHiddenElements extends React.PureComponent {
 				duration: 200,
 				useNativeDriver: false,
 			}).start(() => {
-				this.props.deleteTodo(todoID);
+				// Call parent function to delete the todo
+				this.props.deleteTodo(id);
 				this.animationIsRunning = false;
 			});
 		}
@@ -53,11 +54,14 @@ class HomeTodoHiddenElements extends React.PureComponent {
 
 	/**
 	 * Set edit status to the todo
-	 * @param {*} todoID
+	 * @param {*} id
 	 */
-	editTodo(todoID) {
+	_editTodo(id) {
+		// Close the todo's row
 		this.props.closeRow(this.props.rowMap, this.props.todoData.key);
-		this.props.setEditForm(todoID);
+
+		// Call parent function to set edit status to true and show the input
+		this.props.setEditForm(id);
 	}
 
 	componentDidUpdate(prevProps) {}
@@ -83,7 +87,7 @@ class HomeTodoHiddenElements extends React.PureComponent {
 					<View style={styles.container}>
 						<TouchableOpacity
 							style={[styles.backRightBtn, styles.backRightBtnLeft]}
-							onPress={() => this.editTodo(todoData.id)}
+							onPress={() => this._editTodo(todoData.id)}
 							activeOpacity={0.5}>
 							<Icon
 								name="pen-solid"

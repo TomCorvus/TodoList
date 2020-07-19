@@ -33,9 +33,9 @@ class HomeTodoImage extends React.Component {
 
 	/**
 	 * Pick an image and save it in the dabase
-	 * @param {*} todoID
+	 * @param {*} id
 	 */
-	async _pickImage(todoID) {
+	async _pickImage(id) {
 		this.setState({
 			isLoading: true,
 		});
@@ -48,7 +48,7 @@ class HomeTodoImage extends React.Component {
 				quality: 1,
 			});
 			if (!result.cancelled) {
-				fetch(`https://jsonplaceholder.typicode.com/todos/${todoID}`, {
+				fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
 					method: 'PATCH',
 					body: JSON.stringify({
 						image: result.uri,
@@ -62,7 +62,7 @@ class HomeTodoImage extends React.Component {
 						this.props.editTodo(json);
 					})
 					.catch(function () {
-						Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
+						Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 					});
 			} else {
 				this.setState({
@@ -70,7 +70,7 @@ class HomeTodoImage extends React.Component {
 				});
 			}
 		} catch (error) {
-			Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
+			Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 		}
 	}
 

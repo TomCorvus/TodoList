@@ -14,6 +14,7 @@ class TodoInfo extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isMounted: false,
 			isLoading: false,
 			userName: null,
 		};
@@ -46,7 +47,7 @@ class TodoInfo extends React.Component {
 				allowsEditing: true,
 				aspect: [4, 3],
 				quality: 1,
-			})
+			});
 			if (!result.cancelled) {
 				fetch(`https://jsonplaceholder.typicode.com/todos/${todoID}`, {
 					method: 'PATCH',
@@ -59,19 +60,19 @@ class TodoInfo extends React.Component {
 				})
 					.then((response) => response.json())
 					.then((json) => {
+						// Update Redux state
 						this.props.editTodo(json);
 					})
 					.catch(() => {
-						Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
-					})
+						Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
+					});
 			} else {
 				this.setState({
 					isLoading: false,
 				});
 			}
-
 		} catch (error) {
-			Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
+			Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 		}
 	}
 
@@ -84,15 +85,31 @@ class TodoInfo extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getPermissionAsync();
+		this.setState(
+			{
+				isMounted: true,
+			},
+			() => {
+				this.getPermissionAsync();
 
-		fetch(`https://jsonplaceholder.typicode.com/users/${this.props.todoInfo.userId}`)
-			.then((response) => response.json())
-			.then((json) => {
-				this.setState({
-					userName: json.name,
-				});
-			});
+				// Retrieve author's name of the todo (Bonus)
+				fetch(`https://jsonplaceholder.typicode.com/users/${this.props.todoInfo.userId}`)
+					.then((response) => response.json())
+					.then((json) => {
+						if (this.state.isMounted) {
+							this.setState({
+								userName: json.name,
+							});
+						}
+					});
+			}
+		);
+	}
+
+	componentWillUnmount() {
+		this.setState({
+			isMounted: false,
+		});
 	}
 
 	render() {
