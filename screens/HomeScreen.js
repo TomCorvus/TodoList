@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
-import { SplashScreen } from 'expo';
+import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import Icon from '../components/Global/Icon';
 import HomeWrapper from '../components/Home/HomeWrapper';
@@ -17,7 +17,7 @@ class HomeScreen extends React.Component {
 
 	async loadResourcesAndDataAsync() {
 		try {
-			SplashScreen.preventAutoHide();
+			SplashScreen.preventAutoHideAsync();
 
 			// Load fonts
 			await Font.loadAsync({
@@ -30,7 +30,7 @@ class HomeScreen extends React.Component {
 				{
 					isLoadingComplete: true,
 				},
-				() => SplashScreen.hide()
+				() => SplashScreen.hideAsync()
 			);
 		}
 	}
