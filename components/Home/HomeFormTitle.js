@@ -10,8 +10,6 @@ class HomeFormTitle extends React.PureComponent {
 		super(props);
 		this.state = {
 			isFocused: false,
-			x: 0,
-			y: 0,
 		};
 	}
 
@@ -54,7 +52,7 @@ class HomeFormTitle extends React.PureComponent {
 	render() {
 		let inputStyle = [styles.input],
 			{ isFocused } = this.state,
-			{ errorMessage } = this.props;
+			{ isSubmitting, errorMessage } = this.props;
 
 		if (isFocused) inputStyle.push(styles.focusedInput);
 		if (errorMessage) inputStyle.push(styles.errorInput);
@@ -65,21 +63,22 @@ class HomeFormTitle extends React.PureComponent {
 					<TextInput
 						placeholder={"Qu'avez-vous à faire aujourdhui ?"}
 						style={inputStyle}
-						returnKeyType="go"
+						returnKeyType="send"
 						ref={(search) => {
 							this.textInput = search;
 						}}
 						onBlur={() => this._onBlur()}
 						onFocus={() => this._onFocus()}
-						onSubmitEditing={(event) => this.props._onSubmit()}
 						onChangeText={(text) => this.handlerChange(text)}
+						onSubmitEditing={() => this.props._onSubmit()}
 					/>
 					<TouchableHighlight
-						style={styles.submitBtn}
+						disabled={isSubmitting}
+						style={!isSubmitting ? styles.submitButton : [styles.submitButton, styles.disabledSubmitButton]}
 						onPress={() => this.props._onSubmit()}
 						underlayColor={globalColors.primaryActiveButtonBackgroundColor}
 						activeOpacity={0.5}>
-						{this.props.isSubmitting ? (
+						{isSubmitting ? (
 							<ActivityIndicator size="small" color={globalColors.primaryButtonTextColor} />
 						) : (
 							<Icon
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
 	focusedInput: {
 		...globalStyles.focusedField,
 	},
-	submitBtn: {
+	submitButton: {
 		height: globalVariables.fieldHeight,
 		width: globalVariables.fieldHeight,
 		backgroundColor: globalColors.primaryButtonBackgroundColor,
@@ -129,6 +128,9 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		borderTopRightRadius: globalVariables.fieldBorderRadius,
 		borderBottomRightRadius: globalVariables.fieldBorderRadius,
+	},
+	disabledSubmitButton: {
+		backgroundColor: globalColors.primaryDisabledButtonBackgroundColor,
 	},
 	errorInput: {
 		borderColor: globalColors.errorTextColor,

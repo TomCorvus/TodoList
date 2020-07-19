@@ -19,6 +19,22 @@ class TodoInfo extends React.Component {
 		};
 	}
 
+	/**
+	 * Get user's permission to access to his library
+	 */
+	getPermissionAsync = async () => {
+		if (Constants.platform.ios) {
+			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+			if (status !== 'granted') {
+				alert('Sorry, we need camera roll permissions to make this work!');
+			}
+		}
+	};
+
+	/**
+	 * Pick an image and save it in the dabase
+	 * @param {*} todoID
+	 */
 	async _pickImage(todoID) {
 		this.setState({
 			isLoading: true,
@@ -61,7 +77,7 @@ class TodoInfo extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.todoInfo.image !== prevProps.todoInfo.image && this.state.isLoading) {
+		if (this.props.todoInfo.image !== prevProps.todoInfo.image) {
 			this.setState({
 				isLoading: false,
 			});
@@ -80,17 +96,8 @@ class TodoInfo extends React.Component {
 			});
 	}
 
-	getPermissionAsync = async () => {
-		if (Constants.platform.ios) {
-			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-			if (status !== 'granted') {
-				alert('Sorry, we need camera roll permissions to make this work!');
-			}
-		}
-	};
-
 	render() {
-		const { id, userId, completed, image } = this.props.todoInfo;
+		const { id, completed, image } = this.props.todoInfo;
 
 		return (
 			<View style={styles.wrapper}>
@@ -101,7 +108,12 @@ class TodoInfo extends React.Component {
 							onPress={() => this._pickImage(id)}
 							activeOpacity={0.5}
 							underlayColor="transparent">
-							<View>
+							<View
+								style={{
+									flex: 1,
+									justifyContent: 'center',
+									alignItems: 'center',
+								}}>
 								{image ? (
 									<Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
 								) : (

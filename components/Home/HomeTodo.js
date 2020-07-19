@@ -11,12 +11,14 @@ class HomeTodo extends React.PureComponent {
 		super(props);
 		this.state = {
 			title: this.props.todoData.title,
+			errorMessage: null,
 			checked: this.props.todoData.completed,
 		};
 	}
 
 	/**
-	 * Set the title in the form state
+	 * Set the title in state when the editing status is true
+	 * @param {*} text
 	 */
 	handlerChange = (text) => {
 		this.setState({
@@ -37,19 +39,49 @@ class HomeTodo extends React.PureComponent {
 	/**
 	 * Check/uncheck todo
 	 */
-	_onCheck(id) {
+	_onCheck(todoID) {
 		this.setState(
 			{
 				checked: !this.state.checked,
 			},
 			() => {
-				this.props.checkTodo(id, this.state.checked);
+				this.props.checkTodo(todoID, this.state.checked);
 			}
 		);
 	}
 
-	_onEdit(id) {
-		this.props.editTodo(id, this.state.title);
+	/**
+	 * Update todo's title
+	 * @param {*} todoID
+	 */
+	_onEdit(todoID) {
+		let validTitle = this.checkTodoTitle(this.state.title);
+
+		// Check if the title is not empty
+		if (validTitle) {
+			this.props.editTodo(todoID, this.state.title);
+		}
+	}
+
+	/**
+	 * Check if todo title is valid
+	 * @param {*} title
+	 */
+	checkTodoTitle(title) {
+		let validTitle = false,
+			noSpacesTitle = title.toString().replace(/\s/g, '');
+
+		if (noSpacesTitle !== '') {
+			this.setState({
+				errorMessage: null,
+			});
+			validTitle = true;
+		} else {
+			this.setState({
+				errorMessage: 'Le titre ne peut pas être vide.',
+			});
+		}
+		return validTitle;
 	}
 
 	componentDidUpdate(prevProps) {}
@@ -57,10 +89,9 @@ class HomeTodo extends React.PureComponent {
 	componentDidMount() {}
 
 	render() {
-		let { todoData } = this.props;
-		let inputStyle = [styles.input],
-			{ isFocused } = this.state,
-			{ errorMessage } = this.props;
+		let { todoData } = this.props,
+			inputStyle = [styles.input],
+			{ errorMessage, isFocused } = this.state;
 
 		if (isFocused) inputStyle.push(styles.focusedInput);
 		if (errorMessage) inputStyle.push(styles.errorInput);
@@ -104,11 +135,15 @@ class HomeTodo extends React.PureComponent {
 							<View style={styles.titleWrapper}>
 								{todoData.isEditing ? (
 									<TextInput
+										placeholder={errorMessage ? errorMessage : ''}
+										placeholderTextColor={
+											errorMessage ? globalColors.errorTextColor + 'a8' : 'transparent'
+										}
 										defaultValue={todoData.title}
 										style={inputStyle}
 										autoFocus={true}
 										returnKeyType="send"
-										onSubmitEditing={(event) => this._onEdit(todoData.id, this.state.title)}
+										onSubmitEditing={() => this._onEdit(todoData.id, this.state.title)}
 										onChangeText={(text) => this.handlerChange(text)}
 									/>
 								) : (

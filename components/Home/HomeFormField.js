@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-	StyleSheet,
-	ScrollView,
-	View,
-	Keyboard,
-	KeyboardAvoidingView,
-	TouchableWithoutFeedback,
-	Platform,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { connect } from 'react-redux';
-import { addTodo, editTodo } from '../../actions/TodoActions';
+import { addTodo } from '../../actions/TodoActions';
 import { getTodoInfo } from '../../functions/Todo';
 import HomeFormTitle from './HomeFormTitle';
 import globalStyles from '../../constants/Styles';
@@ -34,7 +26,7 @@ class HomeFormField extends React.Component {
 	}
 
 	/**
-	 * Set todo title in form state
+	 * Set todo title in state
 	 * @param {*} title
 	 */
 	setTodoTitle(title) {
@@ -75,9 +67,13 @@ class HomeFormField extends React.Component {
 	_onSubmit() {
 		const { title } = this.state;
 
+		// Set the submitting status to the form
 		this.setState({ isSubmitting: true }, () => {
 			let validTitle = this.checkTodoTitle(title);
+
+			// Check if the title is not empty
 			if (validTitle) {
+				// POST the todo to the server
 				fetch('https://jsonplaceholder.typicode.com/todos', {
 					method: 'POST',
 					body: JSON.stringify({
@@ -91,8 +87,13 @@ class HomeFormField extends React.Component {
 				})
 					.then((response) => response.json())
 					.then((json) => {
+						// Add the todo in Redux state
 						this.props.addTodo(json);
+
+						// Clear the field
 						this.childRef.current._clearField();
+
+						// Empty the form state and disable the submitting status
 						this.setState({ title: '', isSubmitting: false });
 					})
 					.catch(function (error) {
@@ -117,9 +118,9 @@ class HomeFormField extends React.Component {
 			<View style={styles.container}>
 				<HomeFormTitle
 					title={title}
+					ref={this.childRef}
 					setTodoTitle={this.setTodoTitle}
 					_onSubmit={this._onSubmit}
-					ref={this.childRef}
 					isSubmitting={isSubmitting}
 					errorMessage={titleErrorMessage}
 				/>
@@ -140,10 +141,6 @@ function mapDispatchToProps(dispatch) {
 			var action = addTodo(todoInfo);
 			dispatch(action);
 		},
-		editTodo: function (todoInfo) {
-			var action = editTodo(todoInfo);
-			dispatch(action);
-		},
 	};
 }
 
@@ -151,20 +148,6 @@ const styles = StyleSheet.create({
 	container: {
 		padding: globalStyles.innerBodyPage.padding,
 	},
-	submitButton: {
-		...globalStyles.btn,
-		backgroundColor: globalColors.primaryButtonBackgroundColor,
-		justifyContent: 'center',
-	},
-	disabledSubmitButton: {
-		backgroundColor: globalColors.primaryDisabledButtonBackgroundColor,
-	},
-	submitButtonText: {
-		color: globalColors.primaryButtonTextColor,
-		fontSize: globalVariables.globalFontSize,
-		fontWeight: '700',
-	},
-	disabledSubmitButtonText: {},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeFormField);

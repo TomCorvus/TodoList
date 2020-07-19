@@ -37,7 +37,7 @@ class TodoHeader extends React.PureComponent {
 	}
 
 	/**
-	 *	Delete todo
+	 * Delete todo
 	 * @param {*} todoID
 	 */
 	_deleteTodo(todoID) {
@@ -119,18 +119,18 @@ const styles = StyleSheet.create({
 	container: {
 		...globalStyles.innerHeaderPage,
 	},
-	actionsButtonContainer: {
-		...globalStyles.headerPageActionBtnContainer,
-	},
-	actionsButton: {
-		...globalStyles.headerPageActionBtn,
-	},
 	titleWrapper: {
 		...globalStyles.headerPageTitle,
 	},
 	title: {
 		fontSize: globalVariables.headerTitleFontSize,
 		color: globalColors.headerTitleColor,
+	},
+	actionsButtonContainer: {
+		...globalStyles.headerPageActionBtnContainer,
+	},
+	actionsButton: {
+		...globalStyles.headerPageActionBtn,
 	},
 });
 

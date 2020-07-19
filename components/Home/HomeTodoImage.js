@@ -18,62 +18,23 @@ class HomeTodoImage extends React.Component {
 			isLoading: false,
 		};
 	}
-	componentDidUpdate(prevProps) {
-		if (prevProps.todoImage !== this.props.todoImage && this.state.isLoading) {
-			this.setState({
-				image: this.props.todoImage,
-				isLoading: false,
-			});
-		}
-	}
 
-	render() {
-		let { image } = this.state;
-
-		return (
-			<View style={styles.container}>
-				<TouchableHighlight
-					style={styles.imagePickerButton}
-					onPress={() => this._pickImage(this.props.todoID)}
-					activeOpacity={0.5}
-					underlayColor="transparent">
-					<View>
-						{image ? (
-							<Image source={{ uri: image }} style={{ width: 30, height: 30 }} />
-						) : (
-							<Icon
-								style={styles.checkboxIcon}
-								name="camera-solid"
-								size={globalVariables.globalIconFontSize}
-								color={"#969696"}
-							/>
-						)}
-						{this.state.isLoading && (
-							<ActivityIndicator
-								style={styles.indicator}
-								size="small"
-								color={globalColors.headerBackgroundColor}
-							/>
-						)}
-					</View>
-				</TouchableHighlight>
-			</View>
-		);
-	}
-
-	componentDidMount() {
-		this.getPermissionAsync();
-	}
-
+	/**
+	 * Get user's permission to access to his library
+	 */
 	getPermissionAsync = async () => {
 		if (Constants.platform.ios) {
 			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 			if (status !== 'granted') {
-				alert('Sorry, we need camera roll permissions to make this work!');
+				alert('Désolé, nous avons besoin de votre permission pour que cela fonctionne.');
 			}
 		}
 	};
 
+	/**
+	 * Pick an image and save it in the dabase
+	 * @param {*} todoID
+	 */
 	async _pickImage(todoID) {
 		this.setState({
 			isLoading: true,
@@ -103,18 +64,66 @@ class HomeTodoImage extends React.Component {
 					.catch(function (error) {
 						console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
 					});
-
-				// this.setState({ image: result.uri });
 			} else {
 				this.setState({
 					isLoading: false,
 				});
 			}
-
-			// console.log(result);
 		} catch (E) {
 			console.log(E);
 		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.todoImage !== this.props.todoImage) {
+			this.setState({
+				image: this.props.todoImage,
+				isLoading: false,
+			});
+		}
+	}
+
+	componentDidMount() {
+		this.getPermissionAsync();
+	}
+
+	render() {
+		let { image } = this.state;
+
+		return (
+			<View style={styles.container}>
+				<TouchableHighlight
+					style={styles.imagePickerButton}
+					onPress={() => this._pickImage(this.props.todoID)}
+					activeOpacity={0.5}
+					underlayColor="transparent">
+					<View
+						style={{
+							flex: 1,
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}>
+						{image ? (
+							<Image source={{ uri: image }} style={{ width: 30, height: 30 }} />
+						) : (
+							<Icon
+								style={styles.checkboxIcon}
+								name="camera-solid"
+								size={globalVariables.globalIconFontSize}
+								color={'#969696'}
+							/>
+						)}
+						{this.state.isLoading && (
+							<ActivityIndicator
+								style={styles.indicator}
+								size="small"
+								color={globalColors.headerBackgroundColor}
+							/>
+						)}
+					</View>
+				</TouchableHighlight>
+			</View>
+		);
 	}
 }
 

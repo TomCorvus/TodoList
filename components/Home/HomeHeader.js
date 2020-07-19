@@ -19,21 +19,15 @@ class HomeHeader extends React.PureComponent {
 
 	render() {
 		return (
-			<>
-				<View style={styles.wrapper}>
-					<View style={styles.container}>
-						<View style={styles.titleWrapper}>
-							<Text style={styles.title}>{appInfo.expo.name}</Text>
-						</View>
+			<View style={styles.wrapper}>
+				<View style={styles.container}>
+					<View style={styles.titleWrapper}>
+						<Text style={styles.title}>{appInfo.expo.name}</Text>
 					</View>
 				</View>
-			</>
+			</View>
 		);
 	}
-}
-
-function mapStateToProps(state) {
-	return {};
 }
 
 const styles = StyleSheet.create({
@@ -54,4 +48,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(mapStateToProps, null)(HomeHeader);
+export default HomeHeader;

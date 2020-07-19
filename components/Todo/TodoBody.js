@@ -14,9 +14,8 @@ class TodoBody extends React.PureComponent {
 	componentDidMount() {}
 
 	render() {
-		const { todoID, todoList } = this.props;
-
-		let todoInfo = getTodoInfo(todoID, todoList);
+		const { todoID, todoList } = this.props,
+			todoInfo = getTodoInfo(todoID, todoList);
 
 		return <TodoInfo todoInfo={todoInfo} navigation={this.props.navigation} />;
 	}

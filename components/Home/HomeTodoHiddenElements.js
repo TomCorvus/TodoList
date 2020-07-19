@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Animated, Alert, Platform } from 'react-native';
-import { connect } from 'react-redux';
 import InsetShadow from 'react-native-inset-shadow';
 import Icon from '../Global/Icon';
 import globalVariables from '../../constants/Variables';
@@ -12,7 +11,7 @@ class HomeTodoHiddenElements extends React.PureComponent {
 	}
 
 	/**
-	 * Confirm to delete list
+	 * Confirm to delete todo
 	 * @param {*} todoID
 	 */
 	_confirmDeleteTodo(todoID) {
@@ -35,10 +34,11 @@ class HomeTodoHiddenElements extends React.PureComponent {
 	}
 
 	/**
-	 *
+	 *	Delete todo in database
 	 * @param {*} todoID
 	 */
 	_deleteTodo(todoID) {
+		// Start the animation and delete the todo
 		if (!this.animationIsRunning) {
 			Animated.timing(this.props.todoData.animation, {
 				toValue: 0,
@@ -52,15 +52,12 @@ class HomeTodoHiddenElements extends React.PureComponent {
 	}
 
 	/**
-	 * Navigate to ProductForm view
+	 * Set edit status to the todo
 	 * @param {*} todoID
 	 */
 	editTodo(todoID) {
 		this.props.closeRow(this.props.rowMap, this.props.todoData.key);
-		// this.props.navigation.navigate('TodoForm', { todoID: todoID });
-
-this.props.setEditForm(todoID);
-
+		this.props.setEditForm(todoID);
 	}
 
 	componentDidUpdate(prevProps) {}
@@ -115,14 +112,6 @@ this.props.setEditForm(todoID);
 	}
 }
 
-function mapStateToProps(state) {
-	return {};
-}
-
-function mapDispatchToProps(dispatch) {
-	return {};
-}
-
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -149,4 +138,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect(null, mapDispatchToProps)(HomeTodoHiddenElements);
+export default HomeTodoHiddenElements;
