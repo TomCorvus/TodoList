@@ -75,7 +75,9 @@ class HomeTodo extends React.PureComponent {
 
 				// Check if the title is not empty
 				if (validTitle) {
-					this.props.editTodo(todoID, this.state.title);
+
+					// Send todo's image in parameter to avoid to delete it because the image is not save on the server
+					this.props.editTodo(todoID, this.state.title, this.props.todoData.image);
 				}
 			}
 		);
@@ -103,12 +105,7 @@ class HomeTodo extends React.PureComponent {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.todoData.isEditing !== this.props.todoData.isEditing) {
-			this.setState({
-				isSubmitting: false,
-			});
-		}
-		if (this.props.todoData.isEditing && this.state.errorMessage) {
+		if (prevProps.todoData.isEditing !== this.props.todoData.isEditing || this.props.todoData.isEditing && this.state.errorMessage) {
 			this.setState({
 				isSubmitting: false,
 			});
@@ -273,13 +270,17 @@ const styles = StyleSheet.create({
 		left: 5,
 	},
 	inputWrapper: {
-		...globalStyles.field,
+		flex: 1,
+		height: globalVariables.fieldHeight,
+		borderColor: globalColors.fieldBorderColor,
+		borderWidth: 1,
+		backgroundColor: globalColors.fieldBackgroundColor,
+		borderRadius: globalVariables.fieldBorderRadius,
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
 		paddingLeft: 5,
 		paddingRight: 5,
-		marginBottom: 0,
 		marginRight: 5,
 	},
 	input: {

@@ -102,11 +102,12 @@ class HomeList extends React.Component {
 			});
 	}
 
-	editTodo(id, title) {
+	editTodo(id, title, image) {
 		fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
 			method: 'PATCH',
 			body: JSON.stringify({
 				title: title,
+				image: image,
 			}),
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8',
