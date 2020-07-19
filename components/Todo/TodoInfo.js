@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight, Image, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
 import { connect } from 'react-redux';
 import { editTodo } from '../../actions/TodoActions';
 import Icon from '../Global/Icon';
@@ -21,22 +19,77 @@ class TodoInfo extends React.Component {
 	}
 
 	/**
-	 * Get user's permission to access to his library
+	 * Ask to the user which system he wants to use to take the photo
 	 */
-	getPermissionAsync = async () => {
-		if (Constants.platform.ios) {
-			const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-			if (status !== 'granted') {
-				alert('Sorry, we need camera roll permissions to make this work!');
+	_onSelectImagePicker() {
+		Alert.alert(
+			'Sélectionnez une image',
+			"Accédez votre bibliothèque ou lancez l'appareil photo.",
+			[
+				{
+					text: 'Appareil photo',
+					onPress: () => this._launchCamera(),
+				},
+				{ text: 'Bibliothèque', onPress: () => this._pickImage() },
+				{
+					text: 'Annuler',
+					onPress: () => {},
+					style: 'cancel',
+				},
+			],
+			{ cancelable: false }
+		);
+	}
+
+	/**
+	 * Launch camera and save image in database
+	 * @param {*} todoID
+	 */
+	async _launchCamera() {
+		this.setState({
+			isLoading: true,
+		});
+
+		try {
+			let result = await ImagePicker.launchCameraAsync({
+				storageOptions: {
+					skipBackup: true,
+					path: 'images',
+				},
+			});
+			if (!result.cancelled) {
+				fetch(`https://jsonplaceholder.typicode.com/todos/${this.props.todoInfo.id}`, {
+					method: 'PATCH',
+					body: JSON.stringify({
+						image: result.uri,
+					}),
+					headers: {
+						'Content-type': 'application/json; charset=UTF-8',
+					},
+				})
+					.then((response) => response.json())
+					.then((json) => {
+						// Update Redux state
+						this.props.editTodo(json);
+					})
+					.catch(() => {
+						Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
+					});
+			} else {
+				this.setState({
+					isLoading: false,
+				});
 			}
+		} catch (error) {
+			Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 		}
-	};
+	}
 
 	/**
 	 * Pick an image and save it in the dabase
 	 * @param {*} todoID
 	 */
-	async _pickImage(todoID) {
+	async _pickImage() {
 		this.setState({
 			isLoading: true,
 		});
@@ -49,7 +102,7 @@ class TodoInfo extends React.Component {
 				quality: 1,
 			});
 			if (!result.cancelled) {
-				fetch(`https://jsonplaceholder.typicode.com/todos/${todoID}`, {
+				fetch(`https://jsonplaceholder.typicode.com/todos/${this.props.todoInfo.id}`, {
 					method: 'PATCH',
 					body: JSON.stringify({
 						image: result.uri,
@@ -90,8 +143,6 @@ class TodoInfo extends React.Component {
 				isMounted: true,
 			},
 			() => {
-				this.getPermissionAsync();
-
 				// Retrieve author's name of the todo (Bonus)
 				fetch(`https://jsonplaceholder.typicode.com/users/${this.props.todoInfo.userId}`)
 					.then((response) => response.json())
@@ -121,7 +172,7 @@ class TodoInfo extends React.Component {
 					<View style={styles.todoInfoWrapper}>
 						<TouchableHighlight
 							style={styles.image}
-							onPress={() => this._pickImage(id)}
+							onPress={() => this._onSelectImagePicker()}
 							activeOpacity={0.5}
 							underlayColor="transparent">
 							<View
