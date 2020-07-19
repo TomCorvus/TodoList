@@ -2,6 +2,7 @@ import React from 'react';
 import {
 	StyleSheet,
 	View,
+	Alert,
 	Text,
 	ActivityIndicator,
 	Animated,
@@ -96,8 +97,8 @@ class HomeList extends React.Component {
 				this.props.setTodoList(newTodoList);
 				this.setState({ dataLoaded: true });
 			})
-			.catch(function (error) {
-				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+			.catch(function () {
+				Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 			});
 	}
 
@@ -114,24 +115,9 @@ class HomeList extends React.Component {
 			.then((response) => response.json())
 			.then((json) => {
 				this.props.editTodo(json);
-
-				let { todoList } = this.state;
-
-				let todoIndex = todoList.findIndex(function (todo) {
-					return todo.id === id;
-				});
-
-				let newTodoList = immer.produce(todoList, (draftTodoList) => {
-					draftTodoList[todoIndex].title = title;
-					delete draftTodoList[todoIndex].isEditing;
-				});
-
-				this.setState({
-					todoList: newTodoList,
-				});
 			})
-			.catch(function (error) {
-				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+			.catch(function () {
+				Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 			});
 	}
 
@@ -146,8 +132,8 @@ class HomeList extends React.Component {
 			.then(() => {
 				this.props.deleteTodo(id);
 			})
-			.catch(function (error) {
-				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+			.catch(function () {
+				Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 			});
 	}
 
@@ -169,8 +155,8 @@ class HomeList extends React.Component {
 			.then((json) => {
 				this.props.checkTodo(id, status);
 			})
-			.catch(function (error) {
-				console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+			.catch(function () {
+				Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 			});
 	}
 

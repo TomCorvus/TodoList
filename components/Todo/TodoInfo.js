@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableHighlight, Image, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -46,7 +46,7 @@ class TodoInfo extends React.Component {
 				allowsEditing: true,
 				aspect: [4, 3],
 				quality: 1,
-			});
+			})
 			if (!result.cancelled) {
 				fetch(`https://jsonplaceholder.typicode.com/todos/${todoID}`, {
 					method: 'PATCH',
@@ -61,18 +61,17 @@ class TodoInfo extends React.Component {
 					.then((json) => {
 						this.props.editTodo(json);
 					})
-					.catch(function (error) {
-						console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
-					});
+					.catch(() => {
+						Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
+					})
 			} else {
 				this.setState({
 					isLoading: false,
 				});
 			}
 
-			// console.log(result);
-		} catch (E) {
-			console.log(E);
+		} catch (error) {
+			Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
 		}
 	}
 

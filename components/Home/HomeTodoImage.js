@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, View, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { Image, View, StyleSheet, TouchableHighlight, ActivityIndicator, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -61,16 +61,16 @@ class HomeTodoImage extends React.Component {
 					.then((json) => {
 						this.props.editTodo(json);
 					})
-					.catch(function (error) {
-						console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+					.catch(function () {
+						Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
 					});
 			} else {
 				this.setState({
 					isLoading: false,
 				});
 			}
-		} catch (E) {
-			console.log(E);
+		} catch (error) {
+			Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
 		}
 	}
 

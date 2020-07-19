@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { addTodo } from '../../actions/TodoActions';
 import { getTodoInfo } from '../../functions/Todo';
@@ -96,8 +96,8 @@ class HomeFormField extends React.Component {
 						// Empty the form state and disable the submitting status
 						this.setState({ title: '', isSubmitting: false });
 					})
-					.catch(function (error) {
-						console.log("Il y a eu un problème avec l'opération fetch: " + error.message);
+					.catch(function () {
+						Alert.alert('Il y a eu un problème', "Une erreur est survenue.");
 					});
 			} else {
 				this.setState({ isSubmitting: false });

@@ -23,8 +23,8 @@ class HomeScreen extends React.Component {
 			await Font.loadAsync({
 				...Icon.font,
 			});
-		} catch (e) {
-			console.warn(e);
+		} catch (error) {
+			Alert.alert('Il y a eu un problème', 'Une erreur est survenue.');
 		} finally {
 			this.setState(
 				{
